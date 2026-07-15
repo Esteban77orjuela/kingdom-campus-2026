@@ -1,0 +1,79 @@
+[
+  {
+    "day": "2026-08-15",
+    "label": "Sábado 15",
+    "activities": [
+      { "time": "05:00", "endTime": "05:00", "activity": "Reunión del Staff, oración inicial e instrucciones finales", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "05:00", "endTime": "05:30", "activity": "Recepción de participantes y verificación de asistencia", "responsible": "Esteban Orjuela", "location": "Punto de Encuentro", "type": "general" },
+      { "time": "05:30", "endTime": "09:00", "activity": "Viaje hacia la finca", "responsible": "Samuel", "location": "Transporte", "type": "general" },
+      { "time": "09:00", "endTime": "09:30", "activity": "Llegada, bienvenida, organización e instalación", "responsible": "Esteban Orjuela", "location": "Finca", "type": "general" },
+      { "time": "09:30", "endTime": "10:15", "activity": "Matrícula y Apertura Oficial del Kingdom Campus", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "10:15", "endTime": "10:30", "activity": "Receso Académico", "responsible": "Ámbar Escobar", "location": "Cafetería", "type": "break" },
+      { "time": "10:30", "endTime": "11:00", "activity": "Apertura de la Cátedra Magistral I", "responsible": "Sebastián Rodríguez", "location": "", "type": "worship" },
+      { "time": "11:00", "endTime": "12:30", "activity": "Cátedra Magistral I: Cómo Tener una Vida Devocional", "responsible": "Lorena Pulido", "location": "", "type": "catedra" },
+      { "time": "12:30", "endTime": "13:30", "activity": "Almuerzo", "responsible": "Samuel", "location": "Comedor", "type": "break" },
+      { "time": "13:30", "endTime": "14:00", "activity": "Formación de Facultades y Lanzamiento del Proyecto Integrador", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "14:00", "endTime": "14:30", "activity": "Apertura de la Cátedra Magistral II", "responsible": "Angie", "location": "", "type": "worship" },
+      { "time": "14:30", "endTime": "16:00", "activity": "Cátedra Magistral II: Comportamiento Cristiano en un Entorno Secular", "responsible": "Sarita Orjuela y Samuel", "location": "", "type": "catedra" },
+      { "time": "16:00", "endTime": "17:30", "activity": "Bienestar Universitario: Piscina, Recreación e Integración", "responsible": "Samuel", "location": "Piscina", "type": "free" },
+      { "time": "17:30", "endTime": "18:00", "activity": "Aseo personal y preparación para el Servicio General", "responsible": "Enith", "location": "Habitaciones", "type": "rest" },
+      { "time": "18:00", "endTime": "19:00", "activity": "Cena", "responsible": "Samuel", "location": "Comedor", "type": "break" },
+      { "time": "19:00", "endTime": "19:30", "activity": "Apertura del Servicio General Nocturno", "responsible": "Christian Cárdenas", "location": "", "type": "worship" },
+      { "time": "19:30", "endTime": "20:30", "activity": "Servicio General: Adoración, Ministración y Palabra", "responsible": "Pastor Rey Orjuela", "location": "", "type": "general" },
+      { "time": "20:30", "endTime": "21:15", "activity": "Diario Espiritual y Actualización del Ranking de Facultades", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "21:15", "endTime": "22:00", "activity": "Reunión por Facultades, retroalimentación y oración final", "responsible": "Facilitadores", "location": "Salas por Facultad", "type": "general" },
+      { "time": "22:00", "endTime": "23:00", "activity": "Descanso", "responsible": "Samuel", "location": "Habitaciones", "type": "rest" }
+    ]
+  },
+  {
+    "day": "2026-08-16",
+    "label": "Domingo 16",
+    "activities": [
+      { "time": "06:00", "endTime": "06:30", "activity": "Devocional Congregacional", "responsible": "Cristian Vargas", "location": "", "type": "general" },
+      { "time": "06:30", "endTime": "06:50", "activity": "Activación Física e Integración", "responsible": "Samuel", "location": "", "type": "general" },
+      { "time": "06:50", "endTime": "07:30", "activity": "Aseo Personal y Preparación", "responsible": "Samuel", "location": "Habitaciones", "type": "rest" },
+      { "time": "07:30", "endTime": "07:50", "activity": "Apertura de la Conferencia I", "responsible": "David Parra", "location": "", "type": "general" },
+      { "time": "07:50", "endTime": "08:10", "activity": "Alabanza Congregacional", "responsible": "Felipe Orjuela", "location": "", "type": "worship" },
+      { "time": "08:10", "endTime": "09:00", "activity": "Conferencia I: Noviazgo, Sexualidad y Proyecto de Vida", "responsible": "Hno. Luis Molano", "location": "", "type": "conference" },
+      { "time": "09:00", "endTime": "09:20", "activity": "Receso Académico", "responsible": "Ámbar Escobar", "location": "Cafetería", "type": "break" },
+      { "time": "09:20", "endTime": "10:20", "activity": "Trabajo por Facultades – Desarrollo del Proyecto Integrador", "responsible": "Facilitadores", "location": "Salas por Facultad", "type": "workshop" },
+      { "time": "10:20", "endTime": "10:40", "activity": "Apertura de la Conferencia II", "responsible": "Daniel Parra", "location": "", "type": "general" },
+      { "time": "10:40", "endTime": "11:00", "activity": "Alabanza Congregacional", "responsible": "Felipe Orjuela", "location": "", "type": "worship" },
+      { "time": "11:00", "endTime": "12:00", "activity": "Conferencia II: Relaciones, Emociones y Decisiones", "responsible": "Hno. Luis Molano", "location": "", "type": "conference" },
+      { "time": "12:00", "endTime": "13:00", "activity": "Almuerzo", "responsible": "Samuel", "location": "Comedor", "type": "break" },
+      { "time": "13:00", "endTime": "13:20", "activity": "Apertura de la Cátedra Magistral III", "responsible": "Ámbar Escobar", "location": "", "type": "worship" },
+      { "time": "13:20", "endTime": "13:40", "activity": "Alabanza Congregacional", "responsible": "Felipe Orjuela", "location": "", "type": "worship" },
+      { "time": "13:40", "endTime": "15:00", "activity": "Cátedra Magistral III: ¿Por qué el Cristianismo?", "responsible": "Esteban y Cristian Vargas", "location": "", "type": "catedra" },
+      { "time": "15:00", "endTime": "15:20", "activity": "Receso Académico", "responsible": "Ámbar Escobar", "location": "Cafetería", "type": "break" },
+      { "time": "15:20", "endTime": "16:30", "activity": "Bienestar Universitario II – Integración por Facultades", "responsible": "Samuel", "location": "", "type": "game" },
+      { "time": "16:30", "endTime": "17:30", "activity": "Cena", "responsible": "Samuel", "location": "Comedor", "type": "break" },
+      { "time": "17:30", "endTime": "17:50", "activity": "Apertura del Servicio General Nocturno", "responsible": "Enith", "location": "", "type": "worship" },
+      { "time": "17:50", "endTime": "18:20", "activity": "Alabanza Congregacional", "responsible": "Felipe Orjuela", "location": "", "type": "worship" },
+      { "time": "18:20", "endTime": "19:20", "activity": "Conferencia III: Una Vida Rendida a Cristo", "responsible": "Hno. Luis Molano", "location": "", "type": "conference" },
+      { "time": "19:20", "endTime": "19:40", "activity": "Ministración y Oración Final", "responsible": "Hno. Luis Molano", "location": "", "type": "general" },
+      { "time": "19:40", "endTime": "20:20", "activity": "Diario Espiritual y Actualización del Ranking", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "20:20", "endTime": "21:00", "activity": "Reunión por Facultades, Retroalimentación y Oración Final", "responsible": "Facilitadores", "location": "Salas por Facultad", "type": "general" },
+      { "time": "21:00", "endTime": "22:00", "activity": "Descanso", "responsible": "Samuel", "location": "Habitaciones", "type": "rest" }
+    ]
+  },
+  {
+    "day": "2026-08-17",
+    "label": "Lunes 17",
+    "activities": [
+      { "time": "06:00", "endTime": "06:30", "activity": "Devocional Congregacional", "responsible": "Antonio", "location": "", "type": "general" },
+      { "time": "06:30", "endTime": "06:50", "activity": "Activación Física e Integración", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "06:50", "endTime": "07:30", "activity": "Aseo Personal, Organización de Habitaciones y Equipaje", "responsible": "Samuel", "location": "Habitaciones", "type": "rest" },
+      { "time": "07:30", "endTime": "07:50", "activity": "Apertura de la Cátedra Magistral IV", "responsible": "Sebastián Arboleda", "location": "", "type": "worship" },
+      { "time": "07:50", "endTime": "08:10", "activity": "Alabanza Congregacional", "responsible": "Felipe Orjuela", "location": "", "type": "worship" },
+      { "time": "08:10", "endTime": "09:30", "activity": "Cátedra Magistral IV: Defendiendo tu Fe – Apologética Cristiana", "responsible": "Esteban Orjuela", "location": "", "type": "catedra" },
+      { "time": "09:30", "endTime": "10:00", "activity": "Receso Académico", "responsible": "Ámbar Escobar", "location": "Cafetería", "type": "break" },
+      { "time": "10:00", "endTime": "10:15", "activity": "Instalación de la Clausura Académica", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "10:15", "endTime": "11:40", "activity": "Exposición de los Proyectos Integradores por Facultades", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "11:40", "endTime": "12:00", "activity": "Premiación y Clausura Oficial del Kingdom Campus", "responsible": "Esteban Orjuela", "location": "", "type": "general" },
+      { "time": "12:00", "endTime": "13:00", "activity": "Almuerzo", "responsible": "Samuel", "location": "Comedor", "type": "break" },
+      { "time": "13:00", "endTime": "15:00", "activity": "Bautismos, Piscina y Tiempo de Esparcimiento", "responsible": "Esteban Orjuela", "location": "Piscina", "type": "free" },
+      { "time": "15:00", "endTime": "16:00", "activity": "Organización Final, Entrega de Habitaciones y Cargue de Equipaje", "responsible": "Samuel", "location": "", "type": "general" },
+      { "time": "16:00", "endTime": "17:00", "activity": "Regreso a Bogotá", "responsible": "Samuel", "location": "Transporte", "type": "general" }
+    ]
+  }
+]

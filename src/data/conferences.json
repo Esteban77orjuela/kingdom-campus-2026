@@ -1,0 +1,35 @@
+[
+  {
+    "id": "conf-1",
+    "title": "Noviazgo, Sexualidad y Proyecto de Vida",
+    "speaker": "Hno. Luis Molano",
+    "day": "Domingo 16",
+    "date": "2026-08-16",
+    "time": "08:10 - 09:00",
+    "description": "Conferencia enfocada en las relaciones sanas, la pureza, la identidad, el propósito y la toma de decisiones desde una perspectiva bíblica y pastoral para los jóvenes.",
+    "location": "",
+    "color": "#1A237E"
+  },
+  {
+    "id": "conf-2",
+    "title": "Relaciones, Emociones y Decisiones que Transforman tu Futuro",
+    "speaker": "Hno. Luis Molano",
+    "day": "Domingo 16",
+    "date": "2026-08-16",
+    "time": "11:00 - 12:00",
+    "description": "Enseñanza enfocada en inteligencia emocional, vocación, ministerio, noviazgo, matrimonio, trabajo y propósito de vida conforme a los principios bíblicos.",
+    "location": "",
+    "color": "#C9A84C"
+  },
+  {
+    "id": "conf-3",
+    "title": "Una Vida Rendida a Cristo",
+    "speaker": "Hno. Luis Molano",
+    "day": "Domingo 16",
+    "date": "2026-08-16",
+    "time": "18:20 - 19:20",
+    "description": "Predicación central del retiro enfocada en el compromiso con Cristo, la consagración, la obediencia y la transformación de vida.",
+    "location": "",
+    "color": "#FF8F00"
+  }
+]

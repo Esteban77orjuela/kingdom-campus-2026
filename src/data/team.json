@@ -1,0 +1,114 @@
+[
+  {
+    "id": "team-1",
+    "name": "Esteban Orjuela",
+    "role": "Director General",
+    "photo": null,
+    "color": "#1A237E",
+    "description": "Director general del Kingdom Campus 2026. Coordinador de todas las áreas y líder del staff."
+  },
+  {
+    "id": "team-2",
+    "name": "Samuel",
+    "role": "Coordinador de Logística",
+    "photo": null,
+    "color": "#C9A84C",
+    "description": "Encargado de logística, transporte, alimentación y organización general durante el retiro."
+  },
+  {
+    "id": "team-3",
+    "name": "Felipe Orjuela",
+    "role": "Líder de Alabanza",
+    "photo": null,
+    "color": "#FF8F00",
+    "description": "Director del Grupo de Alabanza y encargado de la adoración congregacional durante el retiro."
+  },
+  {
+    "id": "team-4",
+    "name": "Sarita Orjuela",
+    "role": "Equipo de Medios",
+    "photo": null,
+    "color": "#2E7D32",
+    "description": "Encargada de registro fotográfico, audiovisual y apoyo en medios durante el retiro."
+  },
+  {
+    "id": "team-5",
+    "name": "Cristian Vargas",
+    "role": "Facilitador y Staff",
+    "photo": null,
+    "color": "#7B1FA2",
+    "description": "Miembro del staff, apoyo en logística, facilitador y co-encargado de la Cátedra Magistral III."
+  },
+  {
+    "id": "team-6",
+    "name": "Enith",
+    "role": "Bienestar Femenino",
+    "photo": null,
+    "color": "#D32F2F",
+    "description": "Encargada del bienestar y supervisión de las participantes femeninas durante el retiro."
+  },
+  {
+    "id": "team-7",
+    "name": "Ámbar Escobar",
+    "role": "Coordinación de Recesos",
+    "photo": null,
+    "color": "#1976D2",
+    "description": "Encargada de la organización de los recesos académicos y cafetería. Apoyo en medios."
+  },
+  {
+    "id": "team-8",
+    "name": "Antonio Fuertes",
+    "role": "Staff General",
+    "photo": null,
+    "color": "#388E3C",
+    "description": "Miembro del staff, apoyo en logística y organización durante todo el retiro."
+  },
+  {
+    "id": "team-9",
+    "name": "Lorena Pulido",
+    "role": "Conferencista – Cátedra Magistral",
+    "photo": null,
+    "color": "#0D47A1",
+    "description": "Conferencista de la Cátedra Magistral I: Cómo Tener una Vida Devocional."
+  },
+  {
+    "id": "team-10",
+    "name": "Hno. Luis Molano",
+    "role": "Conferencista Principal",
+    "photo": null,
+    "color": "#C9A84C",
+    "description": "Conferencista invitado. Impartió las conferencias sobre noviazgo, sexualidad, emociones y vida rendida a Cristo."
+  },
+  {
+    "id": "team-11",
+    "name": "Pastor Rey Orjuela",
+    "role": "Pastor – Servicio General",
+    "photo": null,
+    "color": "#4A148C",
+    "description": "Pastor encargado del Servicio General Nocturno: Adoración, Ministración y Palabra."
+  },
+  {
+    "id": "team-12",
+    "name": "Christian Cárdenas",
+    "role": "Apertura de Servicio General",
+    "photo": null,
+    "color": "#E65100",
+    "description": "Encargado de la apertura del Servicio General Nocturno del sábado."
+  },
+  {
+    "id": "team-13",
+    "name": "Daniel Parra",
+    "role": "Equipo de Medios",
+    "photo": null,
+    "color": "#01579B",
+    "description": "Miembro del equipo de medios, fotografía y apoyo en apertura de conferencias."
+  },
+  {
+    "id": "team-14",
+    "name": "David Parra",
+    "role": "Apertura de Conferencias",
+    "photo": null,
+    "color": "#33691E",
+    "description": "Encargado de la apertura de la Conferencia I del día domingo."
+  }
+]

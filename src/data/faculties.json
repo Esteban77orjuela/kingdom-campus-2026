@@ -1,0 +1,52 @@
+[
+  {
+    "id": "jerusalen",
+    "name": "Jerusalén",
+    "color": "#D32F2F",
+    "icon": "city",
+    "description": "Ciudad de paz, cuna de la fe. Representa la herencia espiritual y la fidelidad a Dios.",
+    "points": 0,
+    "members": 24,
+    "leader": "Sara Martínez"
+  },
+  {
+    "id": "antioquia",
+    "name": "Antioquía",
+    "color": "#1976D2",
+    "icon": "church",
+    "description": "Iglesia pionera en el envío de misioneros. Representa el espíritu misionero y la expansión del Reino.",
+    "points": 0,
+    "members": 22,
+    "leader": "Pedro Ramírez"
+  },
+  {
+    "id": "berea",
+    "name": "Berea",
+    "color": "#388E3C",
+    "icon": "book-open-variant",
+    "description": "Creyentes de noble corazón que escudriñaban las Escrituras. Representa el amor por la Palabra.",
+    "points": 0,
+    "members": 20,
+    "leader": "Ana Torres"
+  },
+  {
+    "id": "efeso",
+    "name": "Éfeso",
+    "color": "#F57C00",
+    "icon": "bank",
+    "description": "Iglesia de gran fervor y perseverancia. Representa la dedicación y el trabajo arduo.",
+    "points": 0,
+    "members": 23,
+    "leader": "Luis Herrera"
+  },
+  {
+    "id": "galilea",
+    "name": "Galilea",
+    "color": "#7B1FA2",
+    "icon": "water",
+    "description": "Tierra donde Jesús inició su ministerio. Representa los nuevos comienzos y el poder del Espíritu.",
+    "points": 0,
+    "members": 21,
+    "leader": "María José Luna"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "rec-1",
+    "title": "Qué Llevar",
+    "icon": "bag-personal-outline",
+    "description": "Biblia, cuaderno, lapicero, ropa cómoda, toalla, artículos de aseo personal, linterna y bloqueador solar.",
+    "color": "#1A237E"
+  },
+  {
+    "id": "rec-2",
+    "title": "Código de Vestimenta",
+    "icon": "shirt-outline",
+    "description": "Viste con modestia y decoro. Evita ropa con mensajes inapropiados. Para piscina lleva traje de baño decoroso.",
+    "color": "#C9A84C"
+  },
+  {
+    "id": "rec-3",
+    "title": "Ayuno",
+    "icon": "fast-food-outline",
+    "description": "El sábado haremos ayuno hasta el almuerzo. Mantente hidratado con agua. El ayuno es voluntario pero animado.",
+    "color": "#FF8F00"
+  },
+  {
+    "id": "rec-4",
+    "title": "Piscina",
+    "icon": "swim",
+    "description": "Lleva tu traje de baño, toalla y sandalias. La piscina estará disponible en horarios de tiempo libre.",
+    "color": "#2E7D32"
+  },
+  {
+    "id": "rec-5",
+    "title": "Elementos Personales",
+    "icon": "backpack-outline",
+    "description": "Repelente de insectos, medicamentos personales, bloqueador solar, gorra y una botella de agua reutilizable.",
+    "color": "#7B1FA2"
+  },
+  {
+    "id": "rec-6",
+    "title": "Celulares",
+    "icon": "phone-portrait-outline",
+    "description": "El uso de celulares está restringido durante las actividades. Úsalos solo en tiempos libres y para fotos grupales.",
+    "color": "#D32F2F"
+  },
+  {
+    "id": "rec-7",
+    "title": "Respeto",
+    "icon": "handshake-outline",
+    "description": "Respeta a tus facilitadores, compañeros y al personal. Mantén un ambiente de orden y sana convivencia.",
+    "color": "#1976D2"
+  },
+  {
+    "id": "rec-8",
+    "title": "Puntualidad",
+    "icon": "clock-outline",
+    "description": "Llega 5 minutos antes a cada actividad. La puntualidad refleja respeto por los demás y por el tiempo de Dios.",
+    "color": "#388E3C"
+  }
+]
