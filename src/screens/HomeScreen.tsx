@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRetreatStatus } from '../hooks/useRetreatStatus';
 import { CountdownTimer } from '../components/CountdownTimer';
 import { ScheduleWheel } from '../components/ScheduleWheel';
 import { GlassCard } from '../components/GlassCard';
 import { palette } from '../theme';
-import { RETIRO_START_DATE, RETIRO_NAME, RETIRO_SUBTITLE, RETIRO_VERSE } from '../utils/constants';
+import { RETIRO_START_DATE, RETIRO_END_DATE, RETIRO_NAME, RETIRO_SUBTITLE, RETIRO_VERSE } from '../utils/constants';
+import { ActivityData, getCurrentActivityIndex, isActivityInProgress } from '../utils/scheduleLogic';
 
 interface HomeScreenProps {
   navigation: any;
 }
 
-const allActivities = [
-  // ── Sábado 15 ──────────────────────────────────────────────────
+const allActivities: ActivityData[] = [
+  // ── Sábado 15 ──
   { day: 'Sáb', date: '2026-08-15', time: '05:00', endTime: '05:30', label: 'Llegada al punto de encuentro' },
   { day: 'Sáb', date: '2026-08-15', time: '05:30', endTime: '09:00', label: 'Salida hacia la finca' },
   { day: 'Sáb', date: '2026-08-15', time: '09:00', endTime: '09:30', label: 'Llegada e instalación' },
@@ -28,7 +28,7 @@ const allActivities = [
   { day: 'Sáb', date: '2026-08-15', time: '12:30', endTime: '13:30', label: 'Almuerzo' },
   { day: 'Sáb', date: '2026-08-15', time: '13:30', endTime: '14:00', label: 'Formación de Facultades' },
   { day: 'Sáb', date: '2026-08-15', time: '14:00', endTime: '14:30', label: 'Apertura Cátedra Magistral II' },
-  { day: 'Sáb', date: '2026-08-15', time: '14:30', endTime: '16:00', label: 'Cátedra II – Comportamiento Cristiano en un Entorno Secular' },
+  { day: 'Sáb', date: '2026-08-15', time: '14:30', endTime: '16:00', label: 'Cátedra II – Comportamiento Cristiano' },
   { day: 'Sáb', date: '2026-08-15', time: '16:00', endTime: '17:30', label: 'Piscina e Integración' },
   { day: 'Sáb', date: '2026-08-15', time: '17:30', endTime: '18:00', label: 'Aseo personal' },
   { day: 'Sáb', date: '2026-08-15', time: '18:00', endTime: '19:00', label: 'Cena' },
@@ -36,8 +36,8 @@ const allActivities = [
   { day: 'Sáb', date: '2026-08-15', time: '19:30', endTime: '20:30', label: 'Servicio General y Palabra' },
   { day: 'Sáb', date: '2026-08-15', time: '20:30', endTime: '21:15', label: 'Diario Espiritual y Ranking' },
   { day: 'Sáb', date: '2026-08-15', time: '21:15', endTime: '22:00', label: 'Reunión por Facultades' },
-  { day: 'Sáb', date: '2026-08-15', time: '22:00', endTime: '23:59', label: 'Descanso' },
-  // ── Domingo 16 ─────────────────────────────────────────────────
+  { day: 'Sáb', date: '2026-08-15', time: '22:00', endTime: '23:00', label: 'Descanso' },
+  // ── Domingo 16 ──
   { day: 'Dom', date: '2026-08-16', time: '06:00', endTime: '06:30', label: 'Devocional Congregacional' },
   { day: 'Dom', date: '2026-08-16', time: '06:30', endTime: '06:50', label: 'Activación Física' },
   { day: 'Dom', date: '2026-08-16', time: '06:50', endTime: '07:30', label: 'Aseo Personal' },
@@ -48,11 +48,11 @@ const allActivities = [
   { day: 'Dom', date: '2026-08-16', time: '09:20', endTime: '10:20', label: 'Trabajo por Facultades' },
   { day: 'Dom', date: '2026-08-16', time: '10:20', endTime: '10:40', label: 'Apertura Conferencia II' },
   { day: 'Dom', date: '2026-08-16', time: '10:40', endTime: '11:00', label: 'Alabanza' },
-  { day: 'Dom', date: '2026-08-16', time: '11:00', endTime: '12:00', label: 'Conferencia II – Relaciones, Emociones y Decisiones que Transforman tu Futuro' },
+  { day: 'Dom', date: '2026-08-16', time: '11:00', endTime: '12:00', label: 'Conferencia II – Relaciones, Emociones y Decisiones' },
   { day: 'Dom', date: '2026-08-16', time: '12:00', endTime: '13:00', label: 'Almuerzo' },
   { day: 'Dom', date: '2026-08-16', time: '13:00', endTime: '13:20', label: 'Apertura Cátedra Magistral III' },
   { day: 'Dom', date: '2026-08-16', time: '13:20', endTime: '13:40', label: 'Alabanza' },
-  { day: 'Dom', date: '2026-08-16', time: '13:40', endTime: '15:00', label: 'Cátedra III – ¿Por qué el Cristianismo? Fundamentos de la Fe' },
+  { day: 'Dom', date: '2026-08-16', time: '13:40', endTime: '15:00', label: 'Cátedra III – ¿Por qué el Cristianismo?' },
   { day: 'Dom', date: '2026-08-16', time: '15:00', endTime: '15:20', label: 'Receso' },
   { day: 'Dom', date: '2026-08-16', time: '15:20', endTime: '16:30', label: 'Integración por Facultades' },
   { day: 'Dom', date: '2026-08-16', time: '16:30', endTime: '17:30', label: 'Cena' },
@@ -62,8 +62,8 @@ const allActivities = [
   { day: 'Dom', date: '2026-08-16', time: '19:20', endTime: '19:40', label: 'Ministración' },
   { day: 'Dom', date: '2026-08-16', time: '19:40', endTime: '20:20', label: 'Diario Espiritual y Ranking' },
   { day: 'Dom', date: '2026-08-16', time: '20:20', endTime: '21:00', label: 'Reunión por Facultades' },
-  { day: 'Dom', date: '2026-08-16', time: '21:00', endTime: '23:59', label: 'Descanso' },
-  // ── Lunes 17 ───────────────────────────────────────────────────
+  { day: 'Dom', date: '2026-08-16', time: '21:00', endTime: '22:00', label: 'Descanso' },
+  // ── Lunes 17 ──
   { day: 'Lun', date: '2026-08-17', time: '06:00', endTime: '06:30', label: 'Devocional Congregacional' },
   { day: 'Lun', date: '2026-08-17', time: '06:30', endTime: '06:50', label: 'Activación Física' },
   { day: 'Lun', date: '2026-08-17', time: '06:50', endTime: '07:30', label: 'Organización de Habitaciones y Equipaje' },
@@ -80,26 +80,6 @@ const allActivities = [
   { day: 'Lun', date: '2026-08-17', time: '16:00', endTime: '17:00', label: 'Regreso a Bogotá' },
 ];
 
-function getCurrentActivityIndex(activities: typeof allActivities): number {
-  const now = new Date();
-  const retreatStart = new Date('2026-08-15T05:00:00');
-  const retreatEnd = new Date('2026-08-17T17:00:00');
-
-  if (now < retreatStart) return 0;
-  if (now >= retreatEnd) return activities.length;
-
-  for (let i = 0; i < activities.length; i++) {
-    const act = activities[i];
-    const start = new Date(`${act.date}T${act.time}`);
-    const end = new Date(`${act.date}T${act.endTime}`);
-    if (end <= start) end.setMinutes(end.getMinutes() + 30);
-
-    if (now < start) return i;
-    if (now >= start && now <= end) return i;
-  }
-
-  return activities.length;
-}
 
 const queLlevar = [
   { icon: 'book-outline', label: 'Biblia (física)' },
@@ -141,11 +121,14 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
   const status = useRetreatStatus();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
-  const [currentIndex, setCurrentIndex] = useState(() => getCurrentActivityIndex(allActivities));
+  const [currentIndex, setCurrentIndex] = useState(() => getCurrentActivityIndex(allActivities, RETIRO_START_DATE, RETIRO_END_DATE));
   const hasStarted = status.hasStarted;
 
+  const currentAct = allActivities[currentIndex];
+  const isCurrentOngoing = hasStarted && currentAct ? isActivityInProgress(currentAct) : false;
+
   const tick = useCallback(() => {
-    setCurrentIndex(getCurrentActivityIndex(allActivities));
+    setCurrentIndex(getCurrentActivityIndex(allActivities, RETIRO_START_DATE, RETIRO_END_DATE));
   }, []);
 
   useEffect(() => {
@@ -163,23 +146,18 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 16 }]}
       >
-        {/* Header compacto */}
+        {/* Header con logo */}
         <Animated.View entering={FadeInDown.delay(0).springify()} style={styles.header}>
-          <View style={styles.logoContainer}>
-            <LinearGradient
-              colors={[palette.darkBlue, palette.deepBlue]}
-              style={styles.logoGradient}
-            >
-              <Text style={styles.logoText}>KC</Text>
-            </LinearGradient>
-          </View>
-          <View style={styles.headerTextCol}>
-            <Text style={[styles.title, { color: theme.colors.onSurface }]}>{RETIRO_NAME}</Text>
-            <Text style={[styles.subtitle, { color: palette.gold }]}>{RETIRO_SUBTITLE}</Text>
-            <View style={styles.verseContainer}>
-              <Ionicons name="book-outline" size={12} color={palette.gold} />
-              <Text style={[styles.verse, { color: theme.colors.onSurfaceVariant }]}>{RETIRO_VERSE}</Text>
-            </View>
+          <Image
+            source={require('../../assets/images/Logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Text style={[styles.title, { color: theme.colors.onSurface }]}>{RETIRO_NAME}</Text>
+          <Text style={[styles.subtitle, { color: palette.gold }]}>{RETIRO_SUBTITLE}</Text>
+          <View style={styles.verseContainer}>
+            <Ionicons name="book-outline" size={14} color={palette.gold} />
+            <Text style={[styles.verse, { color: theme.colors.onSurfaceVariant }]}>{RETIRO_VERSE}</Text>
           </View>
         </Animated.View>
 
@@ -192,213 +170,123 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
 
         {/* Schedule Wheel */}
         <Animated.View entering={FadeInDown.delay(250).springify()} style={styles.wheelSection}>
-          <View style={styles.wheelHeader}>
-            <Ionicons name="calendar-outline" size={16} color={palette.gold} />
-            <Text style={[styles.wheelTitle, { color: theme.colors.onSurface }]}>
-              {hasStarted ? 'Actividades' : 'Lo que viene'}
-            </Text>
-          </View>
           <ScheduleWheel
             activities={allActivities}
             currentIndex={currentIndex}
-            hasStarted={hasStarted}
+            isCurrentOngoing={isCurrentOngoing}
           />
         </Animated.View>
 
-        {/* Código de Vestimenta */}
-        <Animated.View entering={FadeInDown.delay(350).springify()} style={styles.section}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => toggleSection('vestimenta')}
-            style={styles.sectionHeaderRow}
-          >
-            <Ionicons name="shirt-outline" size={20} color={palette.darkBlue} />
-            <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Código de Vestimenta</Text>
-            <Ionicons
-              name={expandedSection === 'vestimenta' ? 'chevron-up' : 'chevron-down'}
-              size={18}
-              color={theme.colors.onSurfaceVariant}
-              style={{ marginLeft: 'auto' }}
-            />
-          </TouchableOpacity>
-
-          {expandedSection === 'vestimenta' && (
-            <GlassCard elevation={2} style={styles.vestimentaCard}>
-              <View style={styles.vestimentaRow}>
-                <View style={[styles.vestimentaIcon, { backgroundColor: `${palette.darkBlue}15` }]}>
-                  <Ionicons name="woman-outline" size={22} color={palette.darkBlue} />
-                </View>
-                <View style={styles.vestimentaInfo}>
-                  <Text style={[styles.vestimentaLabel, { color: theme.colors.onSurface }]}>Chicas</Text>
-                  <Text style={[styles.vestimentaText, { color: theme.colors.onSurfaceVariant }]}>
-                    Para la piscina: camiseta y pantaloneta obligatorias. Nada de vestido de baño de dos piezas.
-                  </Text>
-                </View>
+        {/* Secciones colapsables */}
+        {([
+          { key: 'vestimenta', icon: 'shirt-outline' as const, color: palette.darkBlue, title: 'Código de Vestimenta' },
+          { key: 'llevar', icon: 'bag-check-outline' as const, color: palette.gold, title: '¿Qué debo llevar?' },
+          { key: 'recomendaciones', icon: 'bulb-outline' as const, color: palette.amber, title: 'Recomendaciones' },
+          { key: 'catedras', icon: 'school-outline' as const, color: palette.darkBlue, title: 'Durante las Cátedras' },
+          { key: 'infoExtra', icon: 'information-circle-outline' as const, color: palette.amber, title: 'Info Importante' },
+        ] as const).map(({ key, icon, color, title }, idx) => (
+          <Animated.View key={key} entering={FadeInDown.delay(350 + idx * 100).springify()} style={styles.sectionOuter}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => toggleSection(key)}
+              style={[styles.sectionHeader, { backgroundColor: `${color}0D` }]}
+            >
+              <View style={[styles.sectionHeaderIcon, { backgroundColor: `${color}18` }]}>
+                <Ionicons name={icon} size={18} color={color} />
               </View>
-              <View style={[styles.vestimentaDivider, { backgroundColor: theme.colors.outlineVariant }]} />
-              <View style={styles.vestimentaRow}>
-                <View style={[styles.vestimentaIcon, { backgroundColor: `${palette.darkBlue}15` }]}>
-                  <Ionicons name="man-outline" size={22} color={palette.darkBlue} />
-                </View>
-                <View style={styles.vestimentaInfo}>
-                  <Text style={[styles.vestimentaLabel, { color: theme.colors.onSurface }]}>Chicos</Text>
-                  <Text style={[styles.vestimentaText, { color: theme.colors.onSurfaceVariant }]}>
-                    Para la piscina: camiseta y pantaloneta obligatorias.
-                  </Text>
-                </View>
-              </View>
-            </GlassCard>
-          )}
-        </Animated.View>
+              <Text style={[styles.sectionHeaderTitle, { color: theme.colors.onSurface }]}>{title}</Text>
+              <Ionicons
+                name={expandedSection === key ? 'chevron-up' : 'chevron-down'}
+                size={18}
+                color={theme.colors.onSurfaceVariant}
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
 
-        {/* ¿Qué debo llevar? */}
-        <Animated.View entering={FadeInDown.delay(450).springify()} style={styles.section}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => toggleSection('llevar')}
-            style={styles.sectionHeaderRow}
-          >
-            <Ionicons name="bag-check-outline" size={20} color={palette.gold} />
-            <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>¿Qué debo llevar?</Text>
-            <Ionicons
-              name={expandedSection === 'llevar' ? 'chevron-up' : 'chevron-down'}
-              size={18}
-              color={theme.colors.onSurfaceVariant}
-              style={{ marginLeft: 'auto' }}
-            />
-          </TouchableOpacity>
-
-          {expandedSection === 'llevar' && (
-            <View style={styles.llevarGrid}>
-              {queLlevar.map((item) => (
-                <View key={item.label} style={styles.llevarItem}>
-                  <View style={[styles.llevarIconBg, { backgroundColor: `${palette.gold}15` }]}>
-                    <Ionicons name={item.icon as any} size={16} color={palette.gold} />
+            {expandedSection === key && key === 'vestimenta' && (
+              <GlassCard elevation={2} style={styles.contentCard}>
+                <View style={styles.genderRow}>
+                  <View style={[styles.genderDot, { backgroundColor: '#E91E63' }]} />
+                  <View style={styles.genderContent}>
+                    <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicas</Text>
+                    <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
+                      Para la piscina: vestido de baño tipo enterizo, o camiseta con pantaloneta.
+                    </Text>
                   </View>
-                  <Text style={[styles.llevarLabel, { color: theme.colors.onSurface }]}>{item.label}</Text>
                 </View>
-              ))}
-            </View>
-          )}
-        </Animated.View>
-
-        {/* Recomendaciones */}
-        <Animated.View entering={FadeInDown.delay(550).springify()} style={styles.section}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => toggleSection('recomendaciones')}
-            style={styles.sectionHeaderRow}
-          >
-            <Ionicons name="bulb-outline" size={20} color={palette.amber} />
-            <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Recomendaciones</Text>
-            <Ionicons
-              name={expandedSection === 'recomendaciones' ? 'chevron-up' : 'chevron-down'}
-              size={18}
-              color={theme.colors.onSurfaceVariant}
-              style={{ marginLeft: 'auto' }}
-            />
-          </TouchableOpacity>
-
-          {expandedSection === 'recomendaciones' && (
-            <View style={styles.recList}>
-              {recomendaciones.map((rec) => (
-                <View key={rec.text} style={styles.recItem}>
-                  <View style={[styles.recIconBg, { backgroundColor: `${palette.amber}15` }]}>
-                    <Ionicons name={rec.icon as any} size={16} color={palette.amber} />
+                <View style={[styles.genderDivider, { backgroundColor: theme.colors.outlineVariant }]} />
+                <View style={styles.genderRow}>
+                  <View style={[styles.genderDot, { backgroundColor: palette.darkBlue }]} />
+                  <View style={styles.genderContent}>
+                    <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicos</Text>
+                    <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
+                      Para la piscina: camiseta y pantaloneta.
+                    </Text>
                   </View>
-                  <Text style={[styles.recText, { color: theme.colors.onSurface }]}>{rec.text}</Text>
                 </View>
-              ))}
-            </View>
-          )}
-        </Animated.View>
+              </GlassCard>
+            )}
 
-        {/* Durante las Cátedras */}
-        <Animated.View entering={FadeInDown.delay(650).springify()} style={styles.section}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => toggleSection('catedras')}
-            style={styles.sectionHeaderRow}
-          >
-            <Ionicons name="school-outline" size={20} color={palette.darkBlue} />
-            <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Durante las Cátedras</Text>
-            <Ionicons
-              name={expandedSection === 'catedras' ? 'chevron-up' : 'chevron-down'}
-              size={18}
-              color={theme.colors.onSurfaceVariant}
-              style={{ marginLeft: 'auto' }}
-            />
-          </TouchableOpacity>
-
-          {expandedSection === 'catedras' && (
-            <GlassCard elevation={2} style={styles.catedrasCard}>
-              <Text style={[styles.catedrasIntro, { color: theme.colors.onSurfaceVariant }]}>
-                Llevar únicamente:
-              </Text>
-              <View style={styles.catedrasList}>
-                {duranteCatedras.map((item) => (
-                  <View key={item.text} style={styles.catedrasItem}>
-                    <View style={[styles.catedrasIconBg, { backgroundColor: `${palette.darkBlue}15` }]}>
-                      <Ionicons name={item.icon as any} size={16} color={palette.darkBlue} />
+            {expandedSection === key && key === 'llevar' && (
+              <View style={styles.itemsGrid}>
+                {queLlevar.map((item) => (
+                  <View key={item.label} style={styles.itemBox}>
+                    <View style={[styles.itemIconBg, { backgroundColor: `${palette.gold}18` }]}>
+                      <Ionicons name={item.icon as any} size={18} color={palette.gold} />
                     </View>
-                    <Text style={[styles.catedrasText, { color: theme.colors.onSurface }]}>{item.text}</Text>
+                    <Text style={[styles.itemLabel, { color: theme.colors.onSurface }]}>{item.label}</Text>
                   </View>
                 ))}
               </View>
-            </GlassCard>
-          )}
-        </Animated.View>
+            )}
 
-        {/* Info Importante */}
-        <Animated.View entering={FadeInDown.delay(750).springify()} style={styles.section}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => toggleSection('infoExtra')}
-            style={styles.sectionHeaderRow}
-          >
-            <Ionicons name="information-circle-outline" size={20} color={palette.amber} />
-            <Text style={[styles.sectionTitle, { color: theme.colors.onSurface }]}>Info Importante</Text>
-            <Ionicons
-              name={expandedSection === 'infoExtra' ? 'chevron-up' : 'chevron-down'}
-              size={18}
-              color={theme.colors.onSurfaceVariant}
-              style={{ marginLeft: 'auto' }}
-            />
-          </TouchableOpacity>
+            {expandedSection === key && key === 'recomendaciones' && (
+              <GlassCard elevation={2} style={styles.contentCard}>
+                {recomendaciones.map((rec) => (
+                  <View key={rec.text} style={styles.recRow}>
+                    <View style={[styles.recDot, { backgroundColor: palette.amber }]} />
+                    <Text style={[styles.recText, { color: theme.colors.onSurface }]}>{rec.text}</Text>
+                  </View>
+                ))}
+              </GlassCard>
+            )}
 
-          {expandedSection === 'infoExtra' && (
-            <View style={styles.infoGrid}>
-              <GlassCard elevation={1} style={styles.infoCard}>
-                <Ionicons name="cafe-outline" size={22} color={palette.amber} />
-                <Text style={[styles.infoTitle, { color: theme.colors.onSurface }]}>Ayuno</Text>
-                <Text style={[styles.infoDesc, { color: theme.colors.onSurfaceVariant }]}>
-                  Habrá momentos de ayuno voluntario. Si necesitas alimentarte por condición médica, avísanos.
+            {expandedSection === key && key === 'catedras' && (
+              <GlassCard elevation={2} style={styles.contentCard}>
+                <Text style={[styles.catedrasIntro, { color: theme.colors.onSurfaceVariant }]}>
+                  Llevar únicamente:
                 </Text>
+                {duranteCatedras.map((item) => (
+                  <View key={item.text} style={styles.recRow}>
+                    <View style={[styles.itemIconBgSm, { backgroundColor: `${palette.darkBlue}18` }]}>
+                      <Ionicons name={item.icon as any} size={14} color={palette.darkBlue} />
+                    </View>
+                    <Text style={[styles.recText, { color: theme.colors.onSurface }]}>{item.text}</Text>
+                  </View>
+                ))}
               </GlassCard>
-              <GlassCard elevation={1} style={styles.infoCard}>
-                <Ionicons name="water-outline" size={22} color={palette.darkBlue} />
-                <Text style={[styles.infoTitle, { color: theme.colors.onSurface }]}>Piscina</Text>
-                <Text style={[styles.infoDesc, { color: theme.colors.onSurfaceVariant }]}>
-                  Trae ropa de cambio, sandalias y toalla.
-                </Text>
-              </GlassCard>
-              <GlassCard elevation={1} style={styles.infoCard}>
-                <Ionicons name="document-text-outline" size={22} color={palette.amber} />
-                <Text style={[styles.infoTitle, { color: theme.colors.onSurface }]}>Menores de edad</Text>
-                <Text style={[styles.infoDesc, { color: theme.colors.onSurfaceVariant }]}>
-                  Permiso firmado por tus padres + documento de la organización.
-                </Text>
-              </GlassCard>
-              <GlassCard elevation={1} style={styles.infoCard}>
-                <Ionicons name="chatbubble-ellipses-outline" size={22} color={palette.darkBlue} />
-                <Text style={[styles.infoTitle, { color: theme.colors.onSurface }]}>¿Dudas?</Text>
-                <Text style={[styles.infoDesc, { color: theme.colors.onSurfaceVariant }]}>
-                  Contacta al equipo organizador antes del retiro.
-                </Text>
-              </GlassCard>
-            </View>
-          )}
-        </Animated.View>
+            )}
+
+            {expandedSection === key && key === 'infoExtra' && (
+              <View style={styles.infoGrid}>
+                {[
+                  { icon: 'cafe-outline' as const, color: palette.amber, title: 'Ayuno', desc: 'Habrá momentos de ayuno voluntario. Si necesitas alimentarte por condición médica, avísanos.' },
+                  { icon: 'water-outline' as const, color: palette.darkBlue, title: 'Piscina', desc: 'Trae ropa de cambio, sandalias y toalla.' },
+                  { icon: 'document-text-outline' as const, color: palette.amber, title: 'Menores de edad', desc: 'Permiso firmado por tus padres + documento de la organización.' },
+                  { icon: 'chatbubble-ellipses-outline' as const, color: palette.darkBlue, title: '¿Dudas?', desc: 'Contacta al equipo organizador antes del retiro.' },
+                ].map((card) => (
+                  <GlassCard key={card.title} elevation={1} style={styles.infoCard}>
+                    <View style={[styles.infoIconBg, { backgroundColor: `${card.color}18` }]}>
+                      <Ionicons name={card.icon} size={20} color={card.color} />
+                    </View>
+                    <Text style={[styles.infoTitle, { color: theme.colors.onSurface }]}>{card.title}</Text>
+                    <Text style={[styles.infoDesc, { color: theme.colors.onSurfaceVariant }]}>{card.desc}</Text>
+                  </GlassCard>
+                ))}
+              </View>
+            )}
+          </Animated.View>
+        ))}
 
         <View style={{ height: 80 }} />
       </ScrollView>
@@ -410,143 +298,118 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContent: { paddingBottom: 32 },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
     paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 4,
+    paddingTop: 12,
+    paddingBottom: 8,
+    gap: 6,
   },
-  logoContainer: {
-    shadowColor: palette.darkBlue,
-    shadowOpacity: 0.3,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 8,
+  logo: {
+    width: 96,
+    height: 96,
+    marginBottom: 4,
   },
-  logoGradient: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: palette.gold,
-    letterSpacing: 1,
-  },
-  headerTextCol: { flex: 1, gap: 1 },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '800',
     letterSpacing: -0.5,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
-    letterSpacing: 1.5,
+    letterSpacing: 2,
     textTransform: 'uppercase',
   },
   verseContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginTop: 2,
-  },
-  verse: { fontSize: 11, fontWeight: '500', fontStyle: 'italic' },
-  countdownSection: { paddingHorizontal: 20, marginTop: 4 },
-  wheelSection: { marginTop: 12, paddingHorizontal: 16 },
-  wheelHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: 6,
-    marginBottom: 4,
-    paddingHorizontal: 4,
+    marginTop: 4,
   },
-  wheelTitle: { fontSize: 15, fontWeight: '700' },
-  section: { marginTop: 20, paddingHorizontal: 20 },
-  sectionHeaderRow: {
+  verse: { fontSize: 12, fontWeight: '500', fontStyle: 'italic' },
+  countdownSection: { paddingHorizontal: 20, marginTop: 4 },
+  wheelSection: { marginTop: 8, paddingHorizontal: 16 },
+  // Secciones colapsables
+  sectionOuter: { marginTop: 16, paddingHorizontal: 20 },
+  sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 14,
   },
-  sectionTitle: { fontSize: 18, fontWeight: '700', letterSpacing: -0.3 },
-  // Vestimenta
-  vestimentaCard: { padding: 16, gap: 0 },
-  vestimentaRow: { flexDirection: 'row', gap: 12, paddingVertical: 8 },
-  vestimentaIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+  sectionHeaderIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  vestimentaInfo: { flex: 1, gap: 2 },
-  vestimentaLabel: { fontSize: 15, fontWeight: '700' },
-  vestimentaText: { fontSize: 13, lineHeight: 18 },
-  vestimentaDivider: { height: 1, marginVertical: 4, marginLeft: 52 },
+  sectionHeaderTitle: { fontSize: 16, fontWeight: '700', letterSpacing: -0.2 },
+  contentCard: { padding: 16, gap: 0, marginTop: 8 },
+  // Vestimenta
+  genderRow: { flexDirection: 'row', gap: 12, paddingVertical: 8 },
+  genderDot: { width: 8, height: 8, borderRadius: 4, marginTop: 6 },
+  genderContent: { flex: 1, gap: 2 },
+  genderLabel: { fontSize: 15, fontWeight: '700' },
+  genderText: { fontSize: 13, lineHeight: 18 },
+  genderDivider: { height: 1, marginVertical: 4, marginLeft: 20 },
   // Qué llevar
-  llevarGrid: {
+  itemsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 0,
-  },
-  llevarItem: {
-    width: '50%',
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: 8,
     gap: 8,
-    paddingVertical: 7,
-    paddingRight: 8,
   },
-  llevarIconBg: {
-    width: 30,
-    height: 30,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  llevarLabel: { fontSize: 13, fontWeight: '500', flex: 1 },
-  // Recomendaciones
-  recList: { gap: 2 },
-  recItem: {
+  itemBox: {
+    width: '46%',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    paddingVertical: 7,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: `${palette.gold}0A`,
   },
-  recIconBg: {
-    width: 30,
-    height: 30,
-    borderRadius: 8,
+  itemIconBg: {
+    width: 32,
+    height: 32,
+    borderRadius: 9,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  recText: { fontSize: 14, fontWeight: '500', flex: 1 },
-  // Cátedras
-  catedrasCard: { padding: 16 },
-  catedrasIntro: { fontSize: 13, fontWeight: '600', marginBottom: 8 },
-  catedrasList: { gap: 4 },
-  catedrasItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingVertical: 5,
-  },
-  catedrasIconBg: {
+  itemLabel: { fontSize: 13, fontWeight: '600', flex: 1 },
+  itemIconBgSm: {
     width: 28,
     height: 28,
-    borderRadius: 7,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  catedrasText: { fontSize: 14, fontWeight: '500' },
+  // Recomendaciones
+  recRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 6,
+  },
+  recDot: { width: 6, height: 6, borderRadius: 3 },
+  recText: { fontSize: 14, fontWeight: '500', flex: 1 },
+  // Cátedras
+  catedrasIntro: { fontSize: 13, fontWeight: '600', marginBottom: 8 },
   // Info extra
-  infoGrid: { gap: 10 },
-  infoCard: { padding: 14, gap: 4 },
+  infoGrid: { gap: 10, marginTop: 8 },
+  infoCard: { padding: 14, gap: 6 },
+  infoIconBg: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
   infoTitle: { fontSize: 15, fontWeight: '700' },
   infoDesc: { fontSize: 12, lineHeight: 17 },
 });

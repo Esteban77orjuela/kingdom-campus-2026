@@ -1,13 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { palette } from '../theme';
 
-const ITEM_H = 72;
-const VISIBLE_ITEMS = 3;
-const WHEEL_H = ITEM_H * VISIBLE_ITEMS;
+const ITEM_H = 64;
+const VISIBLE = 3;
+const WHEEL_H = ITEM_H * VISIBLE;
 
 interface WheelData {
   day: string;
@@ -20,30 +19,24 @@ interface WheelData {
 interface Props {
   activities: WheelData[];
   currentIndex: number;
-  hasStarted: boolean;
+  isCurrentOngoing: boolean;
 }
 
-export function ScheduleWheel({ activities, currentIndex, hasStarted }: Props) {
+function getTargetY(idx: number, len: number) {
+  return idx >= len ? -(len * ITEM_H) : ITEM_H * (1 - idx);
+}
+
+export function ScheduleWheel({ activities, currentIndex, isCurrentOngoing }: Props) {
   const theme = useTheme();
   const ended = currentIndex >= activities.length;
 
-  // Fórmula: mover la tira para que el item[currentIndex] quede en el slot del medio (slot 1 de 3)
-  // El centro del slot 1 está en y = ITEM_H (la altura de 1 item desde el top del área)
-  // El top del item[currentIndex] dentro de la tira está en y = currentIndex * ITEM_H
-  // Por tanto translateY = ITEM_H - currentIndex * ITEM_H = ITEM_H * (1 - currentIndex)
-  const getTargetY = (idx: number) =>
-    idx >= activities.length
-      ? -(activities.length * ITEM_H)
-      : ITEM_H * (1 - idx);
-
-  // Inicializar directamente en la posición correcta (sin animación inicial de ida y vuelta)
-  const scrollY = useRef(new Animated.Value(getTargetY(currentIndex))).current;
+  const scrollY = useRef(new Animated.Value(getTargetY(currentIndex, activities.length))).current;
 
   useEffect(() => {
     Animated.spring(scrollY, {
-      toValue: getTargetY(currentIndex),
-      damping: 22,
-      stiffness: 140,
+      toValue: getTargetY(currentIndex, activities.length),
+      damping: 18,
+      stiffness: 200,
       mass: 1,
       useNativeDriver: true,
     }).start();
@@ -52,7 +45,7 @@ export function ScheduleWheel({ activities, currentIndex, hasStarted }: Props) {
   if (ended) {
     return (
       <View style={styles.endedBox}>
-        <Ionicons name="checkmark-circle" size={30} color={palette.success} />
+        <Ionicons name="checkmark-circle" size={28} color={palette.success} />
         <Text style={styles.endedText}>¡Retiro Finalizado!</Text>
       </View>
     );
@@ -64,106 +57,83 @@ export function ScheduleWheel({ activities, currentIndex, hasStarted }: Props) {
     current.day === 'Dom' ? 'DOM 16' : 'LUN 17';
 
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.card}>
+      {/* Decorative screws */}
+      <View style={[styles.screw, styles.screwTL, { backgroundColor: palette.gray300 }]} />
+      <View style={[styles.screw, styles.screwTR, { backgroundColor: palette.gray300 }]} />
+      <View style={[styles.screw, styles.screwBL, { backgroundColor: palette.gray300 }]} />
+      <View style={[styles.screw, styles.screwBR, { backgroundColor: palette.gray300 }]} />
 
-      {/* Fila superior: pill del día + estado */}
-      <View style={styles.topRow}>
-        <View style={[styles.dayPill, { backgroundColor: palette.darkBlue }]}>
-          <Text style={styles.dayPillText}>{dayLabel}</Text>
+      {/* Top bar: badge + label */}
+      <View style={styles.topBar}>
+        <View style={[styles.badgePill, { backgroundColor: isCurrentOngoing ? palette.success : palette.gold }]}>
+          <View style={[styles.badgeDot, { backgroundColor: palette.white }]} />
+          <Text style={styles.badgeLabel}>{isCurrentOngoing ? 'EN CURSO' : 'PRÓXIMO'}</Text>
         </View>
-        <View style={styles.statusRow}>
-          <View style={[
-            styles.statusDot,
-            { backgroundColor: hasStarted ? palette.success : palette.gold }
-          ]} />
-          <Text style={[
-            styles.statusText,
-            { color: hasStarted ? palette.success : palette.gold }
-          ]}>
-            {hasStarted ? 'En curso' : 'Próximo'}
-          </Text>
-        </View>
+        <View style={styles.dividerDot} />
+        <Text style={[styles.dayText, { color: theme.colors.onSurfaceVariant }]}>{dayLabel}</Text>
       </View>
 
-      {/* Área de la ruleta */}
-      <View style={{ height: WHEEL_H, overflow: 'hidden', position: 'relative' }}>
+      {/* Counter window */}
+      <View style={[styles.window, { backgroundColor: theme.dark ? '#1a1a2e' : `${palette.darkBlue}06` }]}>
+        {/* Fade edges */}
+        <View style={[styles.fadeTop, { backgroundColor: theme.dark ? '#1a1a2e' : `${palette.darkBlue}06` }]} />
+        <View style={[styles.fadeBot, { backgroundColor: theme.dark ? '#1a1a2e' : `${palette.darkBlue}06` }]} />
 
-        {/* Degradado superior: mezcla con el fondo para el efecto de fade */}
-        <LinearGradient
-          colors={[theme.colors.background, 'transparent']}
-          style={[StyleSheet.absoluteFill, { bottom: undefined, height: ITEM_H }]}
-          pointerEvents="none"
-        />
-        {/* Degradado inferior */}
-        <LinearGradient
-          colors={['transparent', theme.colors.background]}
-          style={[StyleSheet.absoluteFill, { top: undefined, height: ITEM_H }]}
-          pointerEvents="none"
-        />
+        {/* Center glow track */}
+        <View style={[styles.centerTrack, { backgroundColor: `${palette.gold}0A`, borderColor: `${palette.gold}18` }]} />
 
-        {/* Tira deslizante */}
+        {/* Strip */}
         <Animated.View style={{ transform: [{ translateY: scrollY }] }}>
           {activities.map((item, i) => {
             const dist = Math.abs(i - currentIndex);
-            // Solo mostramos 1 item arriba y 1 abajo del actual (distancia máx 1)
             const isCenter = dist === 0;
-            const isAdjacent = dist === 1;
-            const opacity = isCenter ? 1 : isAdjacent ? 0.32 : 0;
+            const adjacent = dist === 1;
 
             return (
               <View
                 key={`${item.date}-${item.time}`}
                 style={[
-                  styles.item,
-                  {
-                    height: ITEM_H,
-                    opacity,
-                    transform: [{ scale: isCenter ? 1 : 0.86 }],
-                  },
+                  styles.row,
+                  { height: ITEM_H, opacity: isCenter ? 1 : adjacent ? 0.35 : 0 },
+                  i < activities.length - 1 && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: `${palette.darkBlue}10` },
                 ]}
               >
-                {/* Hora */}
+                {/* Flip-card left edge accent */}
+                {isCenter && <View style={[styles.flipEdge, { backgroundColor: palette.gold }]} />}
+
+                {/* Time */}
                 <Text style={[
-                  styles.timeText,
-                  isCenter && styles.timeTextCenter,
+                  styles.time,
+                  isCenter && styles.timeCenter,
                   { color: isCenter ? palette.darkBlue : theme.colors.onSurfaceVariant },
                 ]}>
                   {item.time}
                 </Text>
 
-                {/* Nombre de la actividad + badge */}
-                <View style={styles.itemRight}>
+                {/* Divider */}
+                <Text style={[styles.colon, { color: theme.colors.outlineVariant }]}>|</Text>
+
+                {/* Label + badge */}
+                <View style={styles.rightCol}>
                   <Text
                     style={[
-                      styles.actText,
-                      isCenter && styles.actTextCenter,
+                      styles.act,
+                      isCenter && styles.actCenter,
                       { color: isCenter ? theme.colors.onSurface : theme.colors.onSurfaceVariant },
                     ]}
-                    numberOfLines={2}
+                    numberOfLines={1}
                   >
                     {item.label}
                   </Text>
 
                   {isCenter && (
-                    <View style={[
-                      styles.badge,
-                      {
-                        backgroundColor: hasStarted
-                          ? `${palette.success}18`
-                          : `${palette.gold}18`,
-                      },
+                    <Text style={[
+                      styles.subLabel,
+                      { color: isCurrentOngoing ? palette.success : palette.gold },
                     ]}>
-                      <View style={[
-                        styles.badgeDot,
-                        { backgroundColor: hasStarted ? palette.success : palette.gold },
-                      ]} />
-                      <Text style={[
-                        styles.badgeLabel,
-                        { color: hasStarted ? palette.success : palette.gold },
-                      ]}>
-                        {hasStarted ? 'Ahora' : 'Próximo'}
-                      </Text>
-                    </View>
+                      {isCurrentOngoing ? '• Ahora' : '• Siguiente'}
+                    </Text>
                   )}
                 </View>
               </View>
@@ -171,93 +141,58 @@ export function ScheduleWheel({ activities, currentIndex, hasStarted }: Props) {
           })}
         </Animated.View>
       </View>
+
+      {/* Bottom info */}
+      <Text style={[styles.footer, { color: theme.colors.onSurfaceVariant }]}>
+        {activities.length} actividades • {isCurrentOngoing ? 'Retiro en vivo' : 'Retiro próximo'}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    gap: 10,
+  card: {
+    borderRadius: 20,
+    padding: 16,
+    paddingTop: 14,
+    position: 'relative',
+    backgroundColor: palette.white,
+    shadowColor: palette.darkBlue,
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: `${palette.darkBlue}0D`,
   },
 
-  // Fila superior
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 4,
-  },
-  dayPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 12,
-  },
-  dayPillText: {
-    color: palette.white,
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 1,
-  },
-  statusRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  statusDot: {
-    width: 7,
-    height: 7,
+  // Decorative screws
+  screw: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
     borderRadius: 4,
+    opacity: 0.4,
   },
-  statusText: {
-    fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-  },
+  screwTL: { top: 8, left: 8 },
+  screwTR: { top: 8, right: 8 },
+  screwBL: { bottom: 8, left: 8 },
+  screwBR: { bottom: 8, right: 8 },
 
-  // Items de la tira
-  item: {
+  // Top bar
+  topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 4,
-    gap: 14,
+    gap: 8,
+    marginBottom: 12,
   },
-  timeText: {
-    fontSize: 13,
-    fontWeight: '600',
-    fontVariant: ['tabular-nums'],
-    width: 46,
-    textAlign: 'right',
-  },
-  timeTextCenter: {
-    fontSize: 16,
-    fontWeight: '800',
-  },
-  itemRight: {
-    flex: 1,
-    justifyContent: 'center',
-    gap: 4,
-  },
-  actText: {
-    fontSize: 13,
-    fontWeight: '500',
-    lineHeight: 17,
-  },
-  actTextCenter: {
-    fontSize: 15,
-    fontWeight: '700',
-    lineHeight: 19,
-  },
-
-  // Badge "Ahora" / "Próximo"
-  badge: {
+  badgePill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
   },
   badgeDot: {
     width: 5,
@@ -267,20 +202,136 @@ const styles = StyleSheet.create({
   badgeLabel: {
     fontSize: 10,
     fontWeight: '800',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    color: palette.white,
+    letterSpacing: 1,
+  },
+  dividerDot: {
+    width: 3,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: palette.gray400,
+  },
+  dayText: {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.3,
   },
 
-  // Estado "Finalizado"
-  endedBox: {
+  // Counter window
+  window: {
+    borderRadius: 14,
+    overflow: 'hidden',
+    position: 'relative',
+    height: WHEEL_H,
+    borderWidth: 1,
+    borderColor: `${palette.darkBlue}0D`,
+  },
+  fadeTop: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0,
+    height: ITEM_H * 0.6,
+    zIndex: 5,
+  },
+  fadeBot: {
+    position: 'absolute',
+    bottom: 0, left: 0, right: 0,
+    height: ITEM_H * 0.6,
+    zIndex: 5,
+  },
+  centerTrack: {
+    position: 'absolute',
+    left: 2, right: 2,
+    top: '50%',
+    height: ITEM_H,
+    marginTop: -(ITEM_H / 2),
+    borderRadius: 10,
+    borderWidth: 1,
+    zIndex: 2,
+  },
+
+  // Rows
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 14,
+    gap: 10,
+    position: 'relative',
+  },
+  flipEdge: {
+    position: 'absolute',
+    left: 0,
+    top: 4,
+    bottom: 4,
+    width: 3,
+    borderTopRightRadius: 2,
+    borderBottomRightRadius: 2,
+  },
+
+  // Time
+  time: {
+    fontSize: 13,
+    fontWeight: '600',
+    fontVariant: ['tabular-nums'],
+    width: 42,
+    textAlign: 'right',
+  },
+  timeCenter: {
+    fontSize: 16,
+    fontWeight: '800',
+  },
+
+  colon: {
+    fontSize: 14,
+    fontWeight: '300',
+  },
+
+  // Activity
+  rightCol: {
+    flex: 1,
     justifyContent: 'center',
+    gap: 1,
+  },
+  act: {
+    fontSize: 13,
+    fontWeight: '500',
+    lineHeight: 17,
+  },
+  actCenter: {
+    fontSize: 15,
+    fontWeight: '700',
+    lineHeight: 18,
+  },
+  subLabel: {
+    fontSize: 10,
+    fontWeight: '600',
+  },
+
+  // Footer
+  footer: {
+    fontSize: 11,
+    fontWeight: '500',
+    textAlign: 'center',
+    marginTop: 10,
+    letterSpacing: 0.3,
+  },
+
+  // Ended
+  endedBox: {
+    paddingVertical: 20,
+    alignItems: 'center',
     gap: 8,
-    paddingVertical: 24,
+    borderRadius: 20,
+    backgroundColor: palette.white,
+    shadowColor: palette.darkBlue,
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: `${palette.darkBlue}0D`,
   },
   endedText: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '800',
     color: palette.success,
   },

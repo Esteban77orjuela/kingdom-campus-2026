@@ -51,9 +51,9 @@ export function CatedrasScreen() {
           </Text>
         </View>
 
-        {renderSection('Sábado 25', saturday, 0)}
-        {renderSection('Domingo 26', sunday, 1)}
-        {renderSection('Lunes 27', monday, 2)}
+        {renderSection('Sábado 15', saturday, 0)}
+        {renderSection('Domingo 16', sunday, 1)}
+        {renderSection('Lunes 17', monday, 2)}
       </ScrollView>
     </View>
   );

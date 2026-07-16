@@ -14,7 +14,6 @@ interface MoreScreenProps {
 const moreModules = [
   { icon: 'bulb-outline', label: 'Recomendaciones', route: 'Recomendaciones', desc: 'Todo lo que debes saber', color: palette.amber },
   { icon: 'map-outline', label: 'Ubicación', route: 'Ubicacion', desc: 'Cómo llegar', color: '#1976D2' },
-  { icon: 'information-circle-outline', label: 'Acerca de', route: '', desc: 'Información de la app', color: palette.gray400 },
 ];
 
 export function MoreScreen({ navigation }: MoreScreenProps) {
