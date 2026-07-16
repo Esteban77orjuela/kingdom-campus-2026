@@ -9,7 +9,7 @@ import { CountdownTimer } from '../components/CountdownTimer';
 import { ScheduleWheel } from '../components/ScheduleWheel';
 import { GlassCard } from '../components/GlassCard';
 import { palette } from '../theme';
-import { RETIRO_START_DATE, RETIRO_END_DATE, RETIRO_NAME, RETIRO_SUBTITLE, RETIRO_VERSE } from '../utils/constants';
+import { RETIRO_START_DATE, RETIRO_END_DATE, RETIRO_NAME, RETIRO_SUBTITLE, RETIRO_VERSE, RETIRO_VERSE_TEXT } from '../utils/constants';
 import { ActivityData, getCurrentActivityIndex, isActivityInProgress } from '../utils/scheduleLogic';
 
 interface HomeScreenProps {
@@ -123,6 +123,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
 
   const [currentIndex, setCurrentIndex] = useState(() => getCurrentActivityIndex(allActivities, RETIRO_START_DATE, RETIRO_END_DATE));
   const hasStarted = status.hasStarted;
+  const hasEnded = status.hasEnded;
 
   const currentAct = allActivities[currentIndex];
   const isCurrentOngoing = hasStarted && currentAct ? isActivityInProgress(currentAct) : false;
@@ -148,11 +149,13 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
       >
         {/* Header con logo */}
         <Animated.View entering={FadeInDown.delay(0).springify()} style={styles.header}>
-          <Image
-            source={require('../../assets/images/Logo.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          <View style={styles.logoShadow}>
+            <Image
+              source={require('../../assets/images/Logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
           <Text style={[styles.title, { color: theme.colors.onSurface }]}>{RETIRO_NAME}</Text>
           <Text style={[styles.subtitle, { color: palette.gold }]}>{RETIRO_SUBTITLE}</Text>
           <View style={styles.verseContainer}>
@@ -168,14 +171,43 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
           </Animated.View>
         )}
 
+        {/* Mensaje de cierre */}
+        {hasEnded && (
+          <Animated.View entering={FadeInDown.delay(150).springify()} style={styles.closingSection}>
+            <View style={styles.closingCard}>
+              <Ionicons name="heart" size={36} color={palette.gold} />
+              <Text style={[styles.closingTitle, { color: theme.colors.onSurface }]}>
+                ¡Gracias por vivir el{'\n'}Kingdom Campus 2026!
+              </Text>
+              <Text style={[styles.closingSubtitle, { color: palette.gold }]}>Contra Corriente</Text>
+              <View style={[styles.closingDivider, { backgroundColor: theme.colors.outlineVariant }]} />
+              <Text style={[styles.closingVerse, { color: theme.colors.onSurfaceVariant }]}>
+                {RETIRO_VERSE_TEXT}
+              </Text>
+              <Text style={[styles.closingRef, { color: theme.colors.onSurfaceVariant }]}>{RETIRO_VERSE}</Text>
+              <View style={[styles.closingDivider, { backgroundColor: theme.colors.outlineVariant }]} />
+              <Text style={[styles.closingBlessing, { color: theme.colors.onSurface }]}>
+                Que el Señor los siga transformando y guiando{'\n'}en todo su caminar.
+              </Text>
+              <View style={styles.closingIcons}>
+                <Ionicons name="leaf-outline" size={18} color={palette.amber} />
+                <Ionicons name="star-outline" size={18} color={palette.gold} />
+                <Ionicons name="leaf-outline" size={18} color={palette.amber} />
+              </View>
+            </View>
+          </Animated.View>
+        )}
+
         {/* Schedule Wheel */}
-        <Animated.View entering={FadeInDown.delay(250).springify()} style={styles.wheelSection}>
-          <ScheduleWheel
-            activities={allActivities}
-            currentIndex={currentIndex}
-            isCurrentOngoing={isCurrentOngoing}
-          />
-        </Animated.View>
+        {!hasEnded && (
+          <Animated.View entering={FadeInDown.delay(250).springify()} style={styles.wheelSection}>
+            <ScheduleWheel
+              activities={allActivities}
+              currentIndex={currentIndex}
+              isCurrentOngoing={isCurrentOngoing}
+            />
+          </Animated.View>
+        )}
 
         {/* Secciones colapsables */}
         {([
@@ -204,13 +236,14 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
             </TouchableOpacity>
 
             {expandedSection === key && key === 'vestimenta' && (
-              <GlassCard elevation={2} style={styles.contentCard}>
+              <GlassCard elevation={2} style={styles.vestimentaCard}>
+                <Text style={[styles.vestimentaSectionLabel, { color: theme.colors.onSurfaceVariant }]}>General</Text>
                 <View style={styles.genderRow}>
                   <View style={[styles.genderDot, { backgroundColor: '#E91E63' }]} />
                   <View style={styles.genderContent}>
                     <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicas</Text>
                     <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
-                      Para la piscina: vestido de baño tipo enterizo, o camiseta con pantaloneta.
+                      Vestimenta modesta y cómoda: evitar escotes pronunciados, ropa demasiado ajustada o shorts muy cortos.
                     </Text>
                   </View>
                 </View>
@@ -220,7 +253,30 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
                   <View style={styles.genderContent}>
                     <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicos</Text>
                     <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
-                      Para la piscina: camiseta y pantaloneta.
+                      Vestimenta cómoda y respetuosa: evitar camisetas con mensajes inapropiados.
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={[styles.vestimentaDivider, { backgroundColor: theme.colors.outlineVariant }]} />
+
+                <Text style={[styles.vestimentaSectionLabel, { color: theme.colors.onSurfaceVariant }]}>Para la piscina</Text>
+                <View style={styles.genderRow}>
+                  <View style={[styles.genderDot, { backgroundColor: '#E91E63' }]} />
+                  <View style={styles.genderContent}>
+                    <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicas</Text>
+                    <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
+                      Vestido de baño tipo enterizo, o camiseta con pantaloneta.
+                    </Text>
+                  </View>
+                </View>
+                <View style={[styles.genderDivider, { backgroundColor: theme.colors.outlineVariant }]} />
+                <View style={styles.genderRow}>
+                  <View style={[styles.genderDot, { backgroundColor: palette.darkBlue }]} />
+                  <View style={styles.genderContent}>
+                    <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicos</Text>
+                    <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
+                      Camiseta y pantaloneta.
                     </Text>
                   </View>
                 </View>
@@ -304,10 +360,17 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     gap: 6,
   },
+  logoShadow: {
+    shadowColor: palette.gold,
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 12,
+  },
   logo: {
-    width: 96,
-    height: 96,
-    marginBottom: 4,
+    width: 130,
+    height: 130,
+    marginBottom: 8,
   },
   title: {
     fontSize: 24,
@@ -329,6 +392,21 @@ const styles = StyleSheet.create({
   },
   verse: { fontSize: 12, fontWeight: '500', fontStyle: 'italic' },
   countdownSection: { paddingHorizontal: 20, marginTop: 4 },
+  closingSection: { paddingHorizontal: 20, marginTop: 8 },
+  closingCard: {
+    alignItems: 'center',
+    padding: 28,
+    borderRadius: 20,
+    backgroundColor: `${palette.gold}0A`,
+    gap: 12,
+  },
+  closingTitle: { fontSize: 20, fontWeight: '800', textAlign: 'center', lineHeight: 26 },
+  closingSubtitle: { fontSize: 13, fontWeight: '700', letterSpacing: 2, textTransform: 'uppercase' },
+  closingDivider: { height: 1, width: '60%', marginVertical: 4 },
+  closingVerse: { fontSize: 14, fontWeight: '500', fontStyle: 'italic', textAlign: 'center', lineHeight: 20 },
+  closingRef: { fontSize: 12, fontWeight: '600' },
+  closingBlessing: { fontSize: 14, fontWeight: '600', textAlign: 'center', lineHeight: 20 },
+  closingIcons: { flexDirection: 'row', gap: 12, marginTop: 4 },
   wheelSection: { marginTop: 8, paddingHorizontal: 16 },
   // Secciones colapsables
   sectionOuter: { marginTop: 16, paddingHorizontal: 20 },
@@ -350,12 +428,15 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: { fontSize: 16, fontWeight: '700', letterSpacing: -0.2 },
   contentCard: { padding: 16, gap: 0, marginTop: 8 },
   // Vestimenta
+  vestimentaCard: { padding: 16, gap: 0, marginTop: 8 },
+  vestimentaSectionLabel: { fontSize: 12, fontWeight: '700', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 },
   genderRow: { flexDirection: 'row', gap: 12, paddingVertical: 8 },
   genderDot: { width: 8, height: 8, borderRadius: 4, marginTop: 6 },
   genderContent: { flex: 1, gap: 2 },
   genderLabel: { fontSize: 15, fontWeight: '700' },
   genderText: { fontSize: 13, lineHeight: 18 },
   genderDivider: { height: 1, marginVertical: 4, marginLeft: 20 },
+  vestimentaDivider: { height: 1, marginVertical: 8 },
   // Qué llevar
   itemsGrid: {
     flexDirection: 'row',
