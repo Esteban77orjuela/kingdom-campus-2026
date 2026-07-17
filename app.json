@@ -25,12 +25,7 @@
         "backgroundColor": "#1A237E"
       },
       "package": "com.kingdomcampus.app",
-      "permissions": [
-        "RECEIVE_BOOT_COMPLETED",
-        "VIBRATE",
-        "SCHEDULE_EXACT_ALARM",
-        "POST_NOTIFICATIONS"
-      ]
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png",
