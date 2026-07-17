@@ -126,7 +126,6 @@ export function ScheduleWheel({ activities, currentIndex, isCurrentOngoing }: Pr
                       isCenter && styles.actCenter,
                       { color: isCenter ? theme.colors.onSurface : (theme.dark ? '#B0B0B0' : theme.colors.onSurfaceVariant) },
                     ]}
-                    numberOfLines={1}
                   >
                     {item.label}
                   </Text>

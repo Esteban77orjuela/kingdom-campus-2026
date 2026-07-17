@@ -76,7 +76,7 @@ export const darkTheme = {
   fonts,
   colors: {
     ...MD3DarkTheme.colors,
-    primary: '#7986CB',
+    primary: '#5C9EFF',
     primaryContainer: '#1A237E',
     onPrimaryContainer: '#C5CAE9',
     secondary: palette.gold,

@@ -2,9 +2,9 @@
   {
     "id": "rec-1",
     "title": "Qué Llevar",
-    "icon": "bag-personal-outline",
+    "icon": "bag-outline",
     "description": "Biblia, cuaderno, lapicero, ropa cómoda, toalla, artículos de aseo personal, linterna y bloqueador solar.",
-    "color": "#1A237E"
+    "color": ""
   },
   {
     "id": "rec-2",
@@ -44,14 +44,14 @@
   {
     "id": "rec-7",
     "title": "Respeto",
-    "icon": "handshake-outline",
+    "icon": "people-outline",
     "description": "Respeta a tus facilitadores, compañeros y al personal. Mantén un ambiente de orden y sana convivencia.",
     "color": "#1976D2"
   },
   {
     "id": "rec-8",
     "title": "Puntualidad",
-    "icon": "clock-outline",
+    "icon": "time-outline",
     "description": "Llega 5 minutos antes a cada actividad. La puntualidad refleja respeto por los demás y por el tiempo de Dios.",
     "color": "#388E3C"
   }

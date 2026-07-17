@@ -8,8 +8,8 @@ import { TeamCard } from '../components/TeamCard';
 import teamData from '../data/team.json';
 
 const roleOrder = [
-  'Director General',
   'Pastor',
+  'Director General',
   'Conferencista',
   'Coordinador',
   'Líder',
@@ -21,8 +21,8 @@ const roleOrder = [
 ];
 
 function getGroup(role: string): string {
-  if (role.includes('Director')) return 'Dirección';
   if (role.includes('Pastor')) return 'Pastoral';
+  if (role.includes('Director')) return 'Dirección';
   if (role.includes('Conferencista')) return 'Conferencistas';
   if (role.includes('Coordinador')) return 'Coordinación';
   if (role.includes('Líder')) return 'Liderazgo';
@@ -56,7 +56,6 @@ const groupIcons: Record<string, string> = {
 };
 
 const groupColors: Record<string, string> = {
-  'Dirección': '#1A237E',
   'Pastoral': '#4A148C',
   'Conferencistas': '#C9A84C',
   'Coordinación': '#C9A84C',
@@ -90,14 +89,16 @@ export function EquipoScreen() {
           </Text>
         </View>
 
-        {groupKeys.map((group, gi) => (
+        {groupKeys.map((group, gi) => {
+          const groupColor = group === 'Dirección' ? theme.colors.primary : (groupColors[group] || theme.colors.primary);
+          return (
           <Animated.View key={group} entering={FadeInDown.delay(gi * 80).springify()}>
             <View style={styles.groupHeader}>
-              <View style={[styles.groupIconBg, { backgroundColor: `${groupColors[group]}18` }]}>
-                <Ionicons name={groupIcons[group] as any} size={16} color={groupColors[group]} />
+              <View style={[styles.groupIconBg, { backgroundColor: `${groupColor}18` }]}>
+                <Ionicons name={groupIcons[group] as any} size={16} color={groupColor} />
               </View>
               <Text style={[styles.groupTitle, { color: theme.colors.onSurface }]}>{group}</Text>
-              <View style={[styles.groupLine, { backgroundColor: `${groupColors[group]}25` }]} />
+              <View style={[styles.groupLine, { backgroundColor: `${groupColor}25` }]} />
             </View>
             {groups[group].map((member, mi) => (
               <Animated.View key={member.id} entering={FadeInDown.delay(gi * 80 + mi * 40).springify()}>
@@ -110,7 +111,8 @@ export function EquipoScreen() {
               </Animated.View>
             ))}
           </Animated.View>
-        ))}
+          );
+        })}
       </ScrollView>
     </View>
   );

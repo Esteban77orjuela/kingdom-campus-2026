@@ -7,10 +7,10 @@ export const queLlevar = [
   { icon: 'water-outline', label: 'Implementos de aseo' },
   { icon: 'umbrella-outline', label: 'Toalla' },
   { icon: 'water-outline', label: 'Vestido de baño' },
-  { icon: 'footsteps-outline', label: 'Sandalias' },
+  { icon: 'walk-outline', label: 'Sandalias' },
   { icon: 'walk-outline', label: 'Tenis' },
   { icon: 'sunny-outline', label: 'Protector solar' },
-  { icon: 'baseball-cap-outline', label: 'Gorra' },
+  { icon: 'shirt-outline', label: 'Gorra' },
   { icon: 'medkit-outline', label: 'Medicamentos (si aplica)' },
   { icon: 'cafe-outline', label: 'Botella para agua' },
 ];

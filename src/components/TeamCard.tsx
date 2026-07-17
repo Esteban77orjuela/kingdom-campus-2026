@@ -38,10 +38,9 @@ export function TeamCard({ name, role, color, photo, description }: TeamCardProp
               <Text style={[styles.role, { color: accentColor }]}>{role}</Text>
             </View>
           </View>
-          <Ionicons name="chevron-forward" size={18} color={theme.colors.onSurfaceVariant} />
         </View>
         {description && (
-          <Text style={[styles.description, { color: theme.colors.onSurfaceVariant }]} numberOfLines={2}>
+          <Text style={[styles.description, { color: theme.colors.onSurfaceVariant }]}>
             {description}
           </Text>
         )}

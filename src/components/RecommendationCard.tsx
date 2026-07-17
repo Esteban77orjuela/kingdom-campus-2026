@@ -13,16 +13,17 @@ interface RecommendationCardProps {
 
 export function RecommendationCard({ title, icon, description, color }: RecommendationCardProps) {
   const theme = useTheme();
+  const accentColor = color || theme.colors.primary;
 
   return (
     <GlassCard elevation={1} style={styles.container}>
       <View style={styles.content}>
-        <View style={[styles.iconCircle, { backgroundColor: `${color}15` }]}>
-          <Ionicons name={icon} size={24} color={color} />
+        <View style={[styles.iconCircle, { backgroundColor: `${accentColor}15` }]}>
+          <Ionicons name={icon} size={24} color={accentColor} />
         </View>
         <View style={styles.textContent}>
           <Text style={[styles.title, { color: theme.colors.onSurface }]}>{title}</Text>
-          <Text style={[styles.description, { color: theme.colors.onSurfaceVariant }]} numberOfLines={3}>
+          <Text style={[styles.description, { color: theme.colors.onSurfaceVariant }]}>
             {description}
           </Text>
         </View>

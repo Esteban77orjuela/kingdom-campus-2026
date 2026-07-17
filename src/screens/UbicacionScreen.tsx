@@ -4,7 +4,6 @@ import { useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import MapView, { Marker } from 'react-native-maps';
 import { GlassCard } from '../components/GlassCard';
 import retreatData from '../data/retreat.json';
 
@@ -19,20 +18,9 @@ export function UbicacionScreen() {
     const url = Platform.select({
       ios: `maps:0,0?q=${label}@${latitude},${longitude}`,
       android: `geo:0,0?q=${latitude},${longitude}(${label})`,
-      default: `https://maps.google.com/maps?q=${latitude},${longitude}`,
+      default: location.googleMapsLink,
     });
     Linking.openURL(url);
-  };
-
-  const callPhone = () => {
-    Linking.openURL(`tel:${location.phone}`);
-  };
-
-  const region = {
-    latitude: location.latitude,
-    longitude: location.longitude,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
   };
 
   return (
@@ -48,34 +36,32 @@ export function UbicacionScreen() {
           </Text>
         </View>
 
-        {/* Map */}
+        {/* Map Preview */}
         <Animated.View entering={FadeInDown.delay(0).springify()} style={styles.mapContainer}>
-          <GlassCard elevation={2} style={styles.mapCard}>
-            <View style={styles.mapWrapper}>
-              <MapView
-                style={styles.map}
-                initialRegion={region}
-                showsUserLocation={false}
-                showsCompass={false}
-                toolbarEnabled={false}
-              >
-                <Marker
-                  coordinate={{
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                  }}
-                  title={location.name}
-                  description={`${location.address}, ${location.city}`}
-                />
-              </MapView>
-              <TouchableOpacity style={styles.mapOverlay} activeOpacity={0.8} onPress={openMaps}>
-                <View style={[styles.mapButton, { backgroundColor: theme.colors.inverseSurface }]}>
-                  <Ionicons name="compass-outline" size={18} color={theme.colors.inverseOnSurface} />
-                  <Text style={[styles.mapButtonText, { color: theme.colors.inverseOnSurface }]}>Abrir en Google Maps</Text>
+          <TouchableOpacity activeOpacity={0.85} onPress={openMaps}>
+            <GlassCard elevation={2} style={styles.mapCard}>
+              <View style={styles.mapPreview}>
+                {/* Terrain layers */}
+                <View style={[styles.terrainBase, { backgroundColor: theme.dark ? '#1B2A1B' : '#E8F5E9' }]} />
+                <View style={[styles.terrainPatch1, { backgroundColor: theme.dark ? '#2A3A2A' : '#C8E6C9' }]} />
+                <View style={[styles.terrainPatch2, { backgroundColor: theme.dark ? '#1E2E1E' : '#A5D6A7' }]} />
+                {/* Roads */}
+                <View style={[styles.roadH, { backgroundColor: theme.dark ? '#3A3A3A' : '#F5F5F5' }]} />
+                <View style={[styles.roadV, { backgroundColor: theme.dark ? '#3A3A3A' : '#F5F5F5' }]} />
+                {/* Pin */}
+                <View style={[styles.pinContainer, { top: '42%', left: '55%' }]}>
+                  <Ionicons name="location" size={28} color="#D32F2F" />
                 </View>
-              </TouchableOpacity>
-            </View>
-          </GlassCard>
+                {/* Overlay button */}
+                <View style={styles.mapOverlay}>
+                  <View style={[styles.mapButton, { backgroundColor: theme.dark ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.6)' }]}>
+                    <Ionicons name="compass-outline" size={16} color="#FFFFFF" />
+                    <Text style={styles.mapButtonText}>Ver en Google Maps</Text>
+                  </View>
+                </View>
+              </View>
+            </GlassCard>
+          </TouchableOpacity>
         </Animated.View>
 
         {/* Location Info */}
@@ -92,41 +78,6 @@ export function UbicacionScreen() {
             </View>
           </GlassCard>
         </Animated.View>
-
-        {/* Phone */}
-        <Animated.View entering={FadeInDown.delay(250).springify()}>
-          <TouchableOpacity activeOpacity={0.7} onPress={callPhone}>
-            <GlassCard elevation={2} style={styles.infoCard}>
-              <View style={[styles.iconCircle, { backgroundColor: `${theme.colors.secondary}15` }]}>
-                <Ionicons name="call" size={24} color={theme.colors.secondary} />
-              </View>
-              <View style={styles.infoContent}>
-                <Text style={[styles.placeName, { color: theme.colors.onSurface }]}>Teléfono</Text>
-                <Text style={[styles.address, { color: theme.colors.onSurfaceVariant }]}>{location.phone}</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={theme.colors.onSurfaceVariant} />
-            </GlassCard>
-          </TouchableOpacity>
-        </Animated.View>
-
-        {/* Quick Info */}
-        <Animated.View entering={FadeInDown.delay(350).springify()} style={styles.quickInfo}>
-          <GlassCard elevation={1} style={styles.quickInfoCard}>
-            <Ionicons name="car-outline" size={20} color={theme.colors.primary} />
-            <Text style={[styles.quickLabel, { color: theme.colors.onSurfaceVariant }]}>Parqueadero</Text>
-            <Text style={[styles.quickValue, { color: theme.colors.onSurface }]}>Disponible</Text>
-          </GlassCard>
-          <GlassCard elevation={1} style={styles.quickInfoCard}>
-            <Ionicons name="wifi-outline" size={20} color={theme.colors.primary} />
-            <Text style={[styles.quickLabel, { color: theme.colors.onSurfaceVariant }]}>WiFi</Text>
-            <Text style={[styles.quickValue, { color: theme.colors.onSurface }]}>Gratuito</Text>
-          </GlassCard>
-          <GlassCard elevation={1} style={styles.quickInfoCard}>
-            <Ionicons name="restaurant-outline" size={20} color={theme.colors.primary} />
-            <Text style={[styles.quickLabel, { color: theme.colors.onSurfaceVariant }]}>Comedor</Text>
-            <Text style={[styles.quickValue, { color: theme.colors.onSurface }]}>Incluido</Text>
-          </GlassCard>
-        </Animated.View>
       </ScrollView>
     </View>
   );
@@ -139,13 +90,41 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 14, marginTop: 4 },
   mapContainer: { paddingHorizontal: 20, marginBottom: 12 },
   mapCard: { overflow: 'hidden' },
-  mapWrapper: { position: 'relative' },
-  map: { height: 220, borderRadius: 20 },
+  mapPreview: {
+    height: 220,
+    borderRadius: 20,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  terrainBase: { ...StyleSheet.absoluteFillObject },
+  terrainPatch1: {
+    position: 'absolute',
+    top: '10%', left: '20%',
+    width: '60%', height: '40%',
+    borderRadius: 80,
+  },
+  terrainPatch2: {
+    position: 'absolute',
+    bottom: '15%', right: '10%',
+    width: '45%', height: '35%',
+    borderRadius: 100,
+  },
+  roadH: {
+    position: 'absolute',
+    top: '50%', left: 0, right: 0,
+    height: 6,
+    marginTop: -3,
+  },
+  roadV: {
+    position: 'absolute',
+    left: '30%', top: 0, bottom: 0,
+    width: 4,
+  },
+  pinContainer: { position: 'absolute' },
   mapOverlay: {
     position: 'absolute',
     bottom: 12,
-    left: 0,
-    right: 0,
+    left: 0, right: 0,
     alignItems: 'center',
   },
   mapButton: {
@@ -156,9 +135,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 12,
   },
-  mapButtonText: { fontSize: 14, fontWeight: '600' },
+  mapButtonText: { color: '#FFFFFF', fontSize: 14, fontWeight: '600' },
   infoCard: {
-    marginHorizontal: 20, marginBottom: 10,
+    marginHorizontal: 20,
     flexDirection: 'row', alignItems: 'center', gap: 14,
   },
   iconCircle: {
@@ -168,8 +147,4 @@ const styles = StyleSheet.create({
   infoContent: { flex: 1, gap: 2 },
   placeName: { fontSize: 16, fontWeight: '600' },
   address: { fontSize: 13, lineHeight: 18 },
-  quickInfo: { flexDirection: 'row', paddingHorizontal: 20, gap: 10, marginTop: 8 },
-  quickInfoCard: { flex: 1, alignItems: 'center', paddingVertical: 16, gap: 6 },
-  quickLabel: { fontSize: 11, fontWeight: '500' },
-  quickValue: { fontSize: 13, fontWeight: '700' },
 });

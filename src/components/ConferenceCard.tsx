@@ -41,7 +41,7 @@ export function ConferenceCard({ title, speaker, day, time, description, locatio
           <Text style={[styles.speaker, { color: theme.colors.onSurface }]}>{speaker}</Text>
         </View>
 
-        <Text style={[styles.description, { color: theme.colors.onSurfaceVariant }]} numberOfLines={2}>
+        <Text style={[styles.description, { color: theme.colors.onSurfaceVariant }]}>
           {description}
         </Text>
 

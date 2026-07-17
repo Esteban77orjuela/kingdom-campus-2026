@@ -6,9 +6,9 @@
     "day": "Sábado 15",
     "date": "2026-08-15",
     "time": "11:00 - 12:30",
-    "description": "Primera Cátedra Magistral del Campus. Enseñanza dinámica enfocada en desarrollar hábitos espirituales sólidos: estudio de la Biblia, oración, disciplina espiritual y comunión con Dios.",
+    "description": "Aprende a cultivar una relación íntima con Dios mediante la oración, el estudio de la Palabra y una disciplina espiritual que transforme tu vida diaria.",
     "location": "",
-    "color": "#1A237E"
+    "color": ""
   },
   {
     "id": "cat-2",
@@ -17,29 +17,29 @@
     "day": "Sábado 15",
     "date": "2026-08-15",
     "time": "14:30 - 16:00",
-    "description": "Enseñanza práctica acerca del testimonio cristiano en la universidad, el trabajo, la familia, las redes sociales y la sociedad. Se promoverá la participación mediante preguntas y ejemplos cotidianos.",
+    "description": "Reflexionaremos sobre cómo vivir el evangelio en la universidad, el trabajo, la familia y las redes sociales, siendo luz donde Dios nos ha puesto.",
     "location": "",
     "color": "#C9A84C"
   },
   {
     "id": "cat-3",
-    "name": "¿Por qué el Cristianismo? Fundamentos de la Fe y Evangelismo",
+    "name": "¿Por qué el Cristianismo? Fundamentos de la Fe",
     "teacher": "Esteban y Cristian Vargas",
     "day": "Domingo 16",
     "date": "2026-08-16",
     "time": "13:40 - 15:00",
-    "description": "Cátedra enfocada en los fundamentos de la fe cristiana, la historia del cristianismo, apologética básica y herramientas prácticas para compartir el evangelio con convicción y respeto.",
+    "description": "Exploraremos las razones de nuestra fe, la historia del cristianismo y cómo compartir el evangelio con convicción y amor.",
     "location": "",
     "color": "#FF8F00"
   },
   {
     "id": "cat-4",
-    "name": "Defendiendo tu Fe – Apologética Cristiana",
+    "name": "Defendiendo tu Fe",
     "teacher": "Esteban Orjuela",
     "day": "Lunes 17",
     "date": "2026-08-17",
     "time": "08:10 - 09:30",
-    "description": "Cátedra enfocada en fortalecer las convicciones cristianas, responder preguntas frecuentes sobre la fe, comprender los fundamentos del cristianismo y capacitar a los jóvenes para compartir el evangelio.",
+    "description": "Fortaleceremos nuestras convicciones cristianas para responder con sabiduría y amor a las preguntas sobre la fe en nuestro entorno.",
     "location": "",
     "color": "#7B1FA2"
   }
