@@ -17,6 +17,10 @@ export function ConferenciasScreen() {
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 100 }}
       >
         <View style={styles.header}>
+          <View style={styles.headerAccent}>
+            <View style={[styles.accentDot, { backgroundColor: theme.colors.secondary }]} />
+            <View style={[styles.accentLine, { backgroundColor: `${theme.colors.secondary}30` }]} />
+          </View>
           <Text style={[styles.title, { color: theme.colors.onSurface }]}>Conferencias</Text>
           <Text style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
             Mensajes poderosos para tu vida
@@ -47,20 +51,11 @@ export function ConferenciasScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 14,
-    marginTop: 4,
-  },
+  container: { flex: 1 },
+  header: { paddingHorizontal: 20, paddingBottom: 12 },
+  headerAccent: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
+  accentDot: { width: 8, height: 8, borderRadius: 4 },
+  accentLine: { flex: 1, height: 1 },
+  title: { fontSize: 28, fontWeight: '800', letterSpacing: -0.5 },
+  subtitle: { fontSize: 14, marginTop: 4 },
 });

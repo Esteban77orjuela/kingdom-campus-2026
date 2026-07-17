@@ -36,9 +36,7 @@
       "favicon": "./assets/favicon.png",
       "themeColor": "#1A237E"
     },
-    "plugins": [
-      "expo-location"
-    ]
+    "plugins": []
   }
 }
 

@@ -5,15 +5,18 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GlassCard } from '../components/GlassCard';
-import { palette } from '../theme';
+
+import { RootNavigationProp } from '../navigation/types';
+
+type MoreRoute = 'Recomendaciones' | 'Ubicacion';
 
 interface MoreScreenProps {
-  navigation: any;
+  navigation: RootNavigationProp;
 }
 
-const moreModules = [
-  { icon: 'bulb-outline', label: 'Recomendaciones', route: 'Recomendaciones', desc: 'Todo lo que debes saber', color: palette.amber },
-  { icon: 'map-outline', label: 'Ubicación', route: 'Ubicacion', desc: 'Cómo llegar', color: '#1976D2' },
+const moreModules: { icon: string; label: string; route: MoreRoute; desc: string; color: string }[] = [
+  { icon: 'bulb-outline', label: 'Recomendaciones', route: 'Recomendaciones', desc: 'Todo lo que debes saber', color: '#FF8F00' },
+  { icon: 'map-outline', label: 'Ubicación', route: 'Ubicacion', desc: 'Cómo llegar al retiro', color: '#1976D2' },
 ];
 
 export function MoreScreen({ navigation }: MoreScreenProps) {
@@ -27,6 +30,10 @@ export function MoreScreen({ navigation }: MoreScreenProps) {
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 100 }}
       >
         <View style={styles.header}>
+          <View style={styles.headerAccent}>
+            <View style={[styles.accentDot, { backgroundColor: theme.colors.secondary }]} />
+            <View style={[styles.accentLine, { backgroundColor: `${theme.colors.secondary}30` }]} />
+          </View>
           <Text style={[styles.title, { color: theme.colors.onSurface }]}>Más</Text>
           <Text style={[styles.subtitle, { color: theme.colors.onSurfaceVariant }]}>
             Todo lo que necesitas
@@ -57,14 +64,30 @@ export function MoreScreen({ navigation }: MoreScreenProps) {
           ))}
         </View>
 
-        {/* App Info */}
-        <Animated.View entering={FadeInDown.delay(400).springify()} style={styles.appInfo}>
+        {/* Versículo del retiro */}
+        <Animated.View entering={FadeInDown.delay(200).springify()} style={styles.verseSection}>
+          <GlassCard elevation={1} style={styles.verseCard}>
+            <View style={[styles.verseIconBg, { backgroundColor: `${theme.colors.secondary}15` }]}>
+              <Ionicons name="book-outline" size={20} color={theme.colors.secondary} />
+            </View>
+            <Text style={[styles.verseText, { color: theme.colors.onSurface }]}>
+              No os conforméis a este siglo, sino transformaos por medio de la renovación de vuestro entendimiento
+            </Text>
+            <Text style={[styles.verseRef, { color: theme.colors.secondary }]}>Romanos 12:2</Text>
+          </GlassCard>
+        </Animated.View>
+
+        {/* Info de la app */}
+        <Animated.View entering={FadeInDown.delay(300).springify()} style={styles.appInfo}>
           <GlassCard elevation={1} style={styles.appInfoCard}>
             <Text style={[styles.appName, { color: theme.colors.onSurface }]}>Kingdom Campus 2026</Text>
-            <Text style={[styles.appVersion, { color: theme.colors.onSurfaceVariant }]}>Versión 1.0.0</Text>
-            <View style={styles.appDivider} />
+            <Text style={[styles.appVersion, { color: theme.colors.onSurfaceVariant }]}>Contra Corriente</Text>
+            <View style={[styles.appDivider, { backgroundColor: theme.colors.secondary }]} />
             <Text style={[styles.appDesc, { color: theme.colors.onSurfaceVariant }]}>
               Transformando vidas, edificando el Reino.
+            </Text>
+            <Text style={[styles.appVersion, { color: theme.colors.onSurfaceVariant, marginTop: 8 }]}>
+              Versión 1.0.0
             </Text>
           </GlassCard>
         </Animated.View>
@@ -74,81 +97,38 @@ export function MoreScreen({ navigation }: MoreScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 8,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 14,
-    marginTop: 4,
-  },
-  modulesGrid: {
-    paddingTop: 8,
-  },
-  moduleCard: {
-    marginHorizontal: 20,
-    marginBottom: 10,
-  },
-  moduleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
+  container: { flex: 1 },
+  header: { paddingHorizontal: 20, paddingBottom: 8 },
+  headerAccent: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 },
+  accentDot: { width: 8, height: 8, borderRadius: 4 },
+  accentLine: { flex: 1, height: 1 },
+  title: { fontSize: 28, fontWeight: '800', letterSpacing: -0.5 },
+  subtitle: { fontSize: 14, marginTop: 4 },
+  modulesGrid: { paddingTop: 8 },
+  moduleCard: { marginHorizontal: 20, marginBottom: 10 },
+  moduleRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   moduleIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexShrink: 0,
+    width: 48, height: 48, borderRadius: 14,
+    justifyContent: 'center', alignItems: 'center', flexShrink: 0,
   },
-  moduleInfo: {
-    flex: 1,
-    gap: 2,
+  moduleInfo: { flex: 1, gap: 2 },
+  moduleLabel: { fontSize: 16, fontWeight: '600' },
+  moduleDesc: { fontSize: 13 },
+  verseSection: { paddingHorizontal: 20, marginTop: 16 },
+  verseCard: { alignItems: 'center', paddingVertical: 20, gap: 10 },
+  verseIconBg: {
+    width: 40, height: 40, borderRadius: 12,
+    justifyContent: 'center', alignItems: 'center',
   },
-  moduleLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  moduleDesc: {
-    fontSize: 13,
-  },
-  appInfo: {
-    paddingHorizontal: 20,
-    marginTop: 16,
-  },
-  appInfoCard: {
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  appName: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  appVersion: {
-    fontSize: 12,
-    fontWeight: '500',
-    marginTop: 4,
-  },
+  verseText: { fontSize: 14, fontWeight: '500', fontStyle: 'italic', textAlign: 'center', lineHeight: 20, paddingHorizontal: 8 },
+  verseRef: { fontSize: 13, fontWeight: '700' },
+  appInfo: { paddingHorizontal: 20, marginTop: 12 },
+  appInfoCard: { alignItems: 'center', paddingVertical: 20 },
+  appName: { fontSize: 16, fontWeight: '700' },
+  appVersion: { fontSize: 12, fontWeight: '500', marginTop: 4 },
   appDivider: {
-    width: 40,
-    height: 2,
-    backgroundColor: palette.gold,
-    borderRadius: 1,
-    marginVertical: 12,
+    width: 40, height: 2,
+    borderRadius: 1, marginVertical: 12,
   },
-  appDesc: {
-    fontSize: 13,
-    textAlign: 'center',
-    fontStyle: 'italic',
-  },
+  appDesc: { fontSize: 13, textAlign: 'center', fontStyle: 'italic' },
 });

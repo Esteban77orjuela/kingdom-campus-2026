@@ -1,19 +1,20 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTheme } from 'react-native-paper';
 import { BottomTabNavigator } from './BottomTabNavigator';
 import { RecomendacionesScreen } from '../screens/RecomendacionesScreen';
 import { UbicacionScreen } from '../screens/UbicacionScreen';
-import { palette } from '../theme';
 
 const Stack = createNativeStackNavigator();
 
 export function RootNavigator() {
+  const theme = useTheme();
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
-        contentStyle: { backgroundColor: palette.backgroundLight },
+        contentStyle: { backgroundColor: theme.colors.background },
       }}
     >
       <Stack.Screen name="MainTabs" component={BottomTabNavigator} />

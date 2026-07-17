@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,7 +8,6 @@ import { ConferenciasScreen } from '../screens/ConferenciasScreen';
 import { CatedrasScreen } from '../screens/CatedrasScreen';
 import { EquipoScreen } from '../screens/EquipoScreen';
 import { MoreScreen } from '../screens/MoreScreen';
-import { palette } from '../theme';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,18 +33,18 @@ export function BottomTabNavigator() {
           const iconName = focused ? icons.focused : icons.unfocused;
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: palette.darkBlue,
-        tabBarInactiveTintColor: palette.gray400,
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
         tabBarLabelStyle: styles.tabLabel,
         tabBarStyle: {
           backgroundColor: theme.colors.surface,
-          borderTopColor: palette.gray100,
+          borderTopColor: theme.colors.outlineVariant,
           borderTopWidth: 1,
           height: Platform.OS === 'ios' ? 88 : 65,
           paddingTop: 6,
           paddingBottom: Platform.OS === 'ios' ? 28 : 8,
           elevation: 8,
-          shadowColor: '#000',
+          shadowColor: theme.colors.shadow,
           shadowOpacity: 0.1,
           shadowRadius: 12,
           shadowOffset: { width: 0, height: -4 },

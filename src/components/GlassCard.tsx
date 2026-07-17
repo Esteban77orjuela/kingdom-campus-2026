@@ -27,7 +27,7 @@ export function GlassCard({ children, style, elevation = 2, color }: GlassCardPr
         style,
       ]}
     >
-      <View style={[styles.inner, { backgroundColor: color ? `${color}10` : 'rgba(255,255,255,0.5)' }]}>
+      <View style={[styles.inner, { backgroundColor: color ? `${color}10` : theme.dark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.5)' }]}>
         {children}
       </View>
     </View>

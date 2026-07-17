@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import { palette } from '../theme';
 
 const ITEM_H = 64;
 const VISIBLE = 3;
@@ -44,9 +43,9 @@ export function ScheduleWheel({ activities, currentIndex, isCurrentOngoing }: Pr
 
   if (ended) {
     return (
-      <View style={styles.endedBox}>
-        <Ionicons name="checkmark-circle" size={28} color={palette.success} />
-        <Text style={styles.endedText}>¡Retiro Finalizado!</Text>
+      <View style={[styles.endedBox, { backgroundColor: theme.colors.surface, shadowColor: theme.colors.shadow, borderColor: theme.dark ? 'rgba(255,255,255,0.06)' : `${theme.colors.primary}0D` }]}>
+        <Ionicons name="checkmark-circle" size={28} color="#66BB6A" />
+        <Text style={[styles.endedText, { color: '#66BB6A' }]}>¡Retiro Finalizado!</Text>
       </View>
     );
   }
@@ -56,32 +55,37 @@ export function ScheduleWheel({ activities, currentIndex, isCurrentOngoing }: Pr
     current.day === 'Sáb' ? 'SÁB 15' :
     current.day === 'Dom' ? 'DOM 16' : 'LUN 17';
 
+  const windowBg = theme.dark ? '#1A1A2E' : `${theme.colors.primary}06`;
+  const fadeBg = theme.dark ? 'rgba(26,26,46,0.55)' : `${theme.colors.primary}04`;
+  const trackBg = theme.dark ? `${theme.colors.secondary}15` : `${theme.colors.secondary}0A`;
+  const trackBorder = theme.dark ? `${theme.colors.secondary}30` : `${theme.colors.secondary}18`;
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: theme.colors.surface, shadowColor: theme.colors.shadow, borderColor: theme.dark ? 'rgba(255,255,255,0.06)' : `${theme.colors.primary}0D` }]}>
       {/* Decorative screws */}
-      <View style={[styles.screw, styles.screwTL, { backgroundColor: palette.gray300 }]} />
-      <View style={[styles.screw, styles.screwTR, { backgroundColor: palette.gray300 }]} />
-      <View style={[styles.screw, styles.screwBL, { backgroundColor: palette.gray300 }]} />
-      <View style={[styles.screw, styles.screwBR, { backgroundColor: palette.gray300 }]} />
+      <View style={[styles.screw, styles.screwTL, { backgroundColor: theme.colors.onSurfaceVariant }]} />
+      <View style={[styles.screw, styles.screwTR, { backgroundColor: theme.colors.onSurfaceVariant }]} />
+      <View style={[styles.screw, styles.screwBL, { backgroundColor: theme.colors.onSurfaceVariant }]} />
+      <View style={[styles.screw, styles.screwBR, { backgroundColor: theme.colors.onSurfaceVariant }]} />
 
       {/* Top bar: badge + label */}
       <View style={styles.topBar}>
-        <View style={[styles.badgePill, { backgroundColor: isCurrentOngoing ? palette.success : palette.gold }]}>
-          <View style={[styles.badgeDot, { backgroundColor: palette.white }]} />
-          <Text style={styles.badgeLabel}>{isCurrentOngoing ? 'EN CURSO' : 'PRÓXIMO'}</Text>
+        <View style={[styles.badgePill, { backgroundColor: isCurrentOngoing ? '#66BB6A' : theme.colors.secondary }]}>
+          <View style={[styles.badgeDot, { backgroundColor: theme.colors.surface }]} />
+          <Text style={[styles.badgeLabel, { color: theme.colors.surface }]}>{isCurrentOngoing ? 'EN CURSO' : 'PRÓXIMO'}</Text>
         </View>
-        <View style={styles.dividerDot} />
+        <View style={[styles.dividerDot, { backgroundColor: theme.colors.outlineVariant }]} />
         <Text style={[styles.dayText, { color: theme.colors.onSurfaceVariant }]}>{dayLabel}</Text>
       </View>
 
       {/* Counter window */}
-      <View style={[styles.window, { backgroundColor: theme.dark ? '#1a1a2e' : `${palette.darkBlue}06` }]}>
+      <View style={[styles.window, { backgroundColor: windowBg, borderColor: theme.dark ? 'rgba(255,255,255,0.08)' : `${theme.colors.primary}0D` }]}>
         {/* Fade edges */}
-        <View style={[styles.fadeTop, { backgroundColor: theme.dark ? '#1a1a2e' : `${palette.darkBlue}06` }]} />
-        <View style={[styles.fadeBot, { backgroundColor: theme.dark ? '#1a1a2e' : `${palette.darkBlue}06` }]} />
+        <View style={[styles.fadeTop, { backgroundColor: fadeBg }]} />
+        <View style={[styles.fadeBot, { backgroundColor: fadeBg }]} />
 
         {/* Center glow track */}
-        <View style={[styles.centerTrack, { backgroundColor: `${palette.gold}0A`, borderColor: `${palette.gold}18` }]} />
+        <View style={[styles.centerTrack, { backgroundColor: trackBg, borderColor: trackBorder }]} />
 
         {/* Strip */}
         <Animated.View style={{ transform: [{ translateY: scrollY }] }}>
@@ -95,24 +99,24 @@ export function ScheduleWheel({ activities, currentIndex, isCurrentOngoing }: Pr
                 key={`${item.date}-${item.time}`}
                 style={[
                   styles.row,
-                  { height: ITEM_H, opacity: isCenter ? 1 : adjacent ? 0.35 : 0 },
-                  i < activities.length - 1 && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: `${palette.darkBlue}10` },
+                  { height: ITEM_H, opacity: isCenter ? 1 : adjacent ? 0.65 : 0 },
+                  i < activities.length - 1 && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: theme.dark ? 'rgba(255,255,255,0.06)' : `${theme.colors.primary}10` },
                 ]}
               >
                 {/* Flip-card left edge accent */}
-                {isCenter && <View style={[styles.flipEdge, { backgroundColor: palette.gold }]} />}
+                {isCenter && <View style={[styles.flipEdge, { backgroundColor: theme.colors.secondary }]} />}
 
                 {/* Time */}
                 <Text style={[
                   styles.time,
                   isCenter && styles.timeCenter,
-                  { color: isCenter ? palette.darkBlue : theme.colors.onSurfaceVariant },
+                  { color: isCenter ? (theme.dark ? '#FFFFFF' : theme.colors.primary) : (theme.dark ? '#B0B0B0' : theme.colors.onSurfaceVariant) },
                 ]}>
                   {item.time}
                 </Text>
 
                 {/* Divider */}
-                <Text style={[styles.colon, { color: theme.colors.outlineVariant }]}>|</Text>
+                <Text style={[styles.colon, { color: theme.dark ? 'rgba(255,255,255,0.15)' : theme.colors.outlineVariant }]}>|</Text>
 
                 {/* Label + badge */}
                 <View style={styles.rightCol}>
@@ -120,7 +124,7 @@ export function ScheduleWheel({ activities, currentIndex, isCurrentOngoing }: Pr
                     style={[
                       styles.act,
                       isCenter && styles.actCenter,
-                      { color: isCenter ? theme.colors.onSurface : theme.colors.onSurfaceVariant },
+                      { color: isCenter ? theme.colors.onSurface : (theme.dark ? '#B0B0B0' : theme.colors.onSurfaceVariant) },
                     ]}
                     numberOfLines={1}
                   >
@@ -130,7 +134,7 @@ export function ScheduleWheel({ activities, currentIndex, isCurrentOngoing }: Pr
                   {isCenter && (
                     <Text style={[
                       styles.subLabel,
-                      { color: isCurrentOngoing ? palette.success : palette.gold },
+                      { color: isCurrentOngoing ? '#66BB6A' : theme.colors.secondary },
                     ]}>
                       {isCurrentOngoing ? '• Ahora' : '• Siguiente'}
                     </Text>
@@ -156,14 +160,11 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: 14,
     position: 'relative',
-    backgroundColor: palette.white,
-    shadowColor: palette.darkBlue,
     shadowOpacity: 0.08,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: 6 },
     elevation: 4,
     borderWidth: 1,
-    borderColor: `${palette.darkBlue}0D`,
   },
 
   // Decorative screws
@@ -202,14 +203,12 @@ const styles = StyleSheet.create({
   badgeLabel: {
     fontSize: 10,
     fontWeight: '800',
-    color: palette.white,
     letterSpacing: 1,
   },
   dividerDot: {
     width: 3,
     height: 3,
     borderRadius: 2,
-    backgroundColor: palette.gray400,
   },
   dayText: {
     fontSize: 12,
@@ -224,18 +223,17 @@ const styles = StyleSheet.create({
     position: 'relative',
     height: WHEEL_H,
     borderWidth: 1,
-    borderColor: `${palette.darkBlue}0D`,
   },
   fadeTop: {
     position: 'absolute',
     top: 0, left: 0, right: 0,
-    height: ITEM_H * 0.6,
+    height: ITEM_H * 0.3,
     zIndex: 5,
   },
   fadeBot: {
     position: 'absolute',
     bottom: 0, left: 0, right: 0,
-    height: ITEM_H * 0.6,
+    height: ITEM_H * 0.3,
     zIndex: 5,
   },
   centerTrack: {
@@ -321,18 +319,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     borderRadius: 20,
-    backgroundColor: palette.white,
-    shadowColor: palette.darkBlue,
     shadowOpacity: 0.08,
     shadowRadius: 20,
     shadowOffset: { width: 0, height: 6 },
     elevation: 4,
     borderWidth: 1,
-    borderColor: `${palette.darkBlue}0D`,
   },
   endedText: {
     fontSize: 16,
     fontWeight: '800',
-    color: palette.success,
   },
 });

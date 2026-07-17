@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { GlassCard } from './GlassCard';
-import { palette } from '../theme';
 
 interface ConferenceCardProps {
   title: string;
@@ -46,7 +45,7 @@ export function ConferenceCard({ title, speaker, day, time, description, locatio
           {description}
         </Text>
 
-        <View style={styles.metaRow}>
+        <View style={[styles.metaRow, { borderTopColor: theme.colors.outlineVariant }]}>
           <View style={styles.metaItem}>
             <Ionicons name="calendar-outline" size={14} color={theme.colors.onSurfaceVariant} />
             <Text style={[styles.metaText, { color: theme.colors.onSurfaceVariant }]}>{day}</Text>
@@ -133,7 +132,6 @@ const styles = StyleSheet.create({
     gap: 16,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: palette.gray100,
   },
   metaItem: {
     flexDirection: 'row',

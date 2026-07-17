@@ -8,112 +8,14 @@ import { useRetreatStatus } from '../hooks/useRetreatStatus';
 import { CountdownTimer } from '../components/CountdownTimer';
 import { ScheduleWheel } from '../components/ScheduleWheel';
 import { GlassCard } from '../components/GlassCard';
-import { palette } from '../theme';
 import { RETIRO_START_DATE, RETIRO_END_DATE, RETIRO_NAME, RETIRO_SUBTITLE, RETIRO_VERSE, RETIRO_VERSE_TEXT } from '../utils/constants';
-import { ActivityData, getCurrentActivityIndex, isActivityInProgress } from '../utils/scheduleLogic';
+import { getCurrentActivityIndex, isActivityInProgress } from '../utils/scheduleLogic';
+import { allActivities } from '../data/homeSchedule';
+import { queLlevar, recomendaciones, duranteCatedras } from '../data/homeContent';
 
 interface HomeScreenProps {
   navigation: any;
 }
-
-const allActivities: ActivityData[] = [
-  // ── Sábado 15 ──
-  { day: 'Sáb', date: '2026-08-15', time: '05:00', endTime: '05:30', label: 'Llegada al punto de encuentro' },
-  { day: 'Sáb', date: '2026-08-15', time: '05:30', endTime: '09:00', label: 'Salida hacia la finca' },
-  { day: 'Sáb', date: '2026-08-15', time: '09:00', endTime: '09:30', label: 'Llegada e instalación' },
-  { day: 'Sáb', date: '2026-08-15', time: '09:30', endTime: '10:15', label: 'Apertura oficial del Kingdom Campus' },
-  { day: 'Sáb', date: '2026-08-15', time: '10:15', endTime: '10:30', label: 'Receso' },
-  { day: 'Sáb', date: '2026-08-15', time: '10:30', endTime: '11:00', label: 'Apertura Cátedra Magistral I' },
-  { day: 'Sáb', date: '2026-08-15', time: '11:00', endTime: '12:30', label: 'Cátedra I – Cómo Tener una Vida Devocional' },
-  { day: 'Sáb', date: '2026-08-15', time: '12:30', endTime: '13:30', label: 'Almuerzo' },
-  { day: 'Sáb', date: '2026-08-15', time: '13:30', endTime: '14:00', label: 'Formación de Facultades' },
-  { day: 'Sáb', date: '2026-08-15', time: '14:00', endTime: '14:30', label: 'Apertura Cátedra Magistral II' },
-  { day: 'Sáb', date: '2026-08-15', time: '14:30', endTime: '16:00', label: 'Cátedra II – Comportamiento Cristiano' },
-  { day: 'Sáb', date: '2026-08-15', time: '16:00', endTime: '17:30', label: 'Piscina e Integración' },
-  { day: 'Sáb', date: '2026-08-15', time: '17:30', endTime: '18:00', label: 'Aseo personal' },
-  { day: 'Sáb', date: '2026-08-15', time: '18:00', endTime: '19:00', label: 'Cena' },
-  { day: 'Sáb', date: '2026-08-15', time: '19:00', endTime: '19:30', label: 'Apertura Servicio General' },
-  { day: 'Sáb', date: '2026-08-15', time: '19:30', endTime: '20:30', label: 'Servicio General y Palabra' },
-  { day: 'Sáb', date: '2026-08-15', time: '20:30', endTime: '21:15', label: 'Diario Espiritual y Ranking' },
-  { day: 'Sáb', date: '2026-08-15', time: '21:15', endTime: '22:00', label: 'Reunión por Facultades' },
-  { day: 'Sáb', date: '2026-08-15', time: '22:00', endTime: '23:00', label: 'Descanso' },
-  // ── Domingo 16 ──
-  { day: 'Dom', date: '2026-08-16', time: '06:00', endTime: '06:30', label: 'Devocional Congregacional' },
-  { day: 'Dom', date: '2026-08-16', time: '06:30', endTime: '06:50', label: 'Activación Física' },
-  { day: 'Dom', date: '2026-08-16', time: '06:50', endTime: '07:30', label: 'Aseo Personal' },
-  { day: 'Dom', date: '2026-08-16', time: '07:30', endTime: '07:50', label: 'Apertura Conferencia I' },
-  { day: 'Dom', date: '2026-08-16', time: '07:50', endTime: '08:10', label: 'Alabanza' },
-  { day: 'Dom', date: '2026-08-16', time: '08:10', endTime: '09:00', label: 'Conferencia I – Noviazgo, Sexualidad y Proyecto de Vida' },
-  { day: 'Dom', date: '2026-08-16', time: '09:00', endTime: '09:20', label: 'Receso' },
-  { day: 'Dom', date: '2026-08-16', time: '09:20', endTime: '10:20', label: 'Trabajo por Facultades' },
-  { day: 'Dom', date: '2026-08-16', time: '10:20', endTime: '10:40', label: 'Apertura Conferencia II' },
-  { day: 'Dom', date: '2026-08-16', time: '10:40', endTime: '11:00', label: 'Alabanza' },
-  { day: 'Dom', date: '2026-08-16', time: '11:00', endTime: '12:00', label: 'Conferencia II – Relaciones, Emociones y Decisiones' },
-  { day: 'Dom', date: '2026-08-16', time: '12:00', endTime: '13:00', label: 'Almuerzo' },
-  { day: 'Dom', date: '2026-08-16', time: '13:00', endTime: '13:20', label: 'Apertura Cátedra Magistral III' },
-  { day: 'Dom', date: '2026-08-16', time: '13:20', endTime: '13:40', label: 'Alabanza' },
-  { day: 'Dom', date: '2026-08-16', time: '13:40', endTime: '15:00', label: 'Cátedra III – ¿Por qué el Cristianismo?' },
-  { day: 'Dom', date: '2026-08-16', time: '15:00', endTime: '15:20', label: 'Receso' },
-  { day: 'Dom', date: '2026-08-16', time: '15:20', endTime: '16:30', label: 'Integración por Facultades' },
-  { day: 'Dom', date: '2026-08-16', time: '16:30', endTime: '17:30', label: 'Cena' },
-  { day: 'Dom', date: '2026-08-16', time: '17:30', endTime: '17:50', label: 'Apertura Servicio General' },
-  { day: 'Dom', date: '2026-08-16', time: '17:50', endTime: '18:20', label: 'Alabanza' },
-  { day: 'Dom', date: '2026-08-16', time: '18:20', endTime: '19:20', label: 'Conferencia III – Una Vida Rendida a Cristo' },
-  { day: 'Dom', date: '2026-08-16', time: '19:20', endTime: '19:40', label: 'Ministración' },
-  { day: 'Dom', date: '2026-08-16', time: '19:40', endTime: '20:20', label: 'Diario Espiritual y Ranking' },
-  { day: 'Dom', date: '2026-08-16', time: '20:20', endTime: '21:00', label: 'Reunión por Facultades' },
-  { day: 'Dom', date: '2026-08-16', time: '21:00', endTime: '22:00', label: 'Descanso' },
-  // ── Lunes 17 ──
-  { day: 'Lun', date: '2026-08-17', time: '06:00', endTime: '06:30', label: 'Devocional Congregacional' },
-  { day: 'Lun', date: '2026-08-17', time: '06:30', endTime: '06:50', label: 'Activación Física' },
-  { day: 'Lun', date: '2026-08-17', time: '06:50', endTime: '07:30', label: 'Organización de Habitaciones y Equipaje' },
-  { day: 'Lun', date: '2026-08-17', time: '07:30', endTime: '07:50', label: 'Apertura Cátedra Magistral IV' },
-  { day: 'Lun', date: '2026-08-17', time: '07:50', endTime: '08:10', label: 'Alabanza' },
-  { day: 'Lun', date: '2026-08-17', time: '08:10', endTime: '09:30', label: 'Cátedra IV – Defendiendo tu Fe: Apologética Cristiana' },
-  { day: 'Lun', date: '2026-08-17', time: '09:30', endTime: '10:00', label: 'Receso' },
-  { day: 'Lun', date: '2026-08-17', time: '10:00', endTime: '10:15', label: 'Clausura Académica' },
-  { day: 'Lun', date: '2026-08-17', time: '10:15', endTime: '11:40', label: 'Exposición de Proyectos por Facultades' },
-  { day: 'Lun', date: '2026-08-17', time: '11:40', endTime: '12:00', label: 'Premiación y Clausura' },
-  { day: 'Lun', date: '2026-08-17', time: '12:00', endTime: '13:00', label: 'Almuerzo' },
-  { day: 'Lun', date: '2026-08-17', time: '13:00', endTime: '15:00', label: 'Bautismos, Piscina y Tiempo Libre' },
-  { day: 'Lun', date: '2026-08-17', time: '15:00', endTime: '16:00', label: 'Organización Final y Equipaje' },
-  { day: 'Lun', date: '2026-08-17', time: '16:00', endTime: '17:00', label: 'Regreso a Bogotá' },
-];
-
-
-const queLlevar = [
-  { icon: 'book-outline', label: 'Biblia (física)' },
-  { icon: 'document-text-outline', label: 'Cuaderno de apuntes' },
-  { icon: 'create-outline', label: 'Esfero' },
-  { icon: 'shirt-outline', label: 'Ropa cómoda 3 días' },
-  { icon: 'cloudy-night-outline', label: 'Chaqueta para la noche' },
-  { icon: 'water-outline', label: 'Implementos de aseo' },
-  { icon: 'umbrella-outline', label: 'Toalla' },
-  { icon: 'water-outline', label: 'Vestido de baño' },
-  { icon: 'footsteps-outline', label: 'Sandalias' },
-  { icon: 'walk-outline', label: 'Tenis' },
-  { icon: 'sunny-outline', label: 'Protector solar' },
-  { icon: 'baseball-cap-outline', label: 'Gorra' },
-  { icon: 'medkit-outline', label: 'Medicamentos (si aplica)' },
-  { icon: 'cafe-outline', label: 'Botella para agua' },
-];
-
-const recomendaciones = [
-  { icon: 'time-outline', text: 'Llegar puntualmente al punto de encuentro.' },
-  { icon: 'people-outline', text: 'Mantener siempre una actitud de respeto.' },
-  { icon: 'football-outline', text: 'Participar en todas las actividades.' },
-  { icon: 'home-outline', text: 'Cuidar las instalaciones.' },
-  { icon: 'shield-checkmark-outline', text: 'Seguir las instrucciones del Staff.' },
-  { icon: 'trash-outline', text: 'Mantener limpio el lugar.' },
-  { icon: 'people-outline', text: 'Permanecer siempre con tu Facultad.' },
-];
-
-const duranteCatedras = [
-  { icon: 'book-outline', text: 'Biblia' },
-  { icon: 'document-text-outline', text: 'Cuaderno' },
-  { icon: 'create-outline', text: 'Esfero' },
-  { icon: 'phone-portrait-outline', text: 'Sin celular (para concentrarnos)' },
-];
 
 export function HomeScreen({ navigation }: HomeScreenProps) {
   const theme = useTheme();
@@ -141,6 +43,12 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
+  const accent = {
+    primary: theme.colors.primary,
+    secondary: theme.colors.secondary,
+    tertiary: theme.colors.tertiary,
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
@@ -149,7 +57,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
       >
         {/* Header con logo */}
         <Animated.View entering={FadeInDown.delay(0).springify()} style={styles.header}>
-          <View style={styles.logoShadow}>
+          <View style={[styles.logoShadow, { shadowColor: theme.colors.secondary }]}>
             <Image
               source={require('../../assets/images/Logo.png')}
               style={styles.logo}
@@ -157,9 +65,9 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
             />
           </View>
           <Text style={[styles.title, { color: theme.colors.onSurface }]}>{RETIRO_NAME}</Text>
-          <Text style={[styles.subtitle, { color: palette.gold }]}>{RETIRO_SUBTITLE}</Text>
+          <Text style={[styles.subtitle, { color: theme.colors.secondary }]}>{RETIRO_SUBTITLE}</Text>
           <View style={styles.verseContainer}>
-            <Ionicons name="book-outline" size={14} color={palette.gold} />
+            <Ionicons name="book-outline" size={14} color={theme.colors.secondary} />
             <Text style={[styles.verse, { color: theme.colors.onSurfaceVariant }]}>{RETIRO_VERSE}</Text>
           </View>
         </Animated.View>
@@ -174,12 +82,12 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
         {/* Mensaje de cierre */}
         {hasEnded && (
           <Animated.View entering={FadeInDown.delay(150).springify()} style={styles.closingSection}>
-            <View style={styles.closingCard}>
-              <Ionicons name="heart" size={36} color={palette.gold} />
+            <View style={[styles.closingCard, { backgroundColor: theme.dark ? `${theme.colors.secondary}08` : `${theme.colors.secondary}0A` }]}>
+              <Ionicons name="heart" size={36} color={theme.colors.secondary} />
               <Text style={[styles.closingTitle, { color: theme.colors.onSurface }]}>
                 ¡Gracias por vivir el{'\n'}Kingdom Campus 2026!
               </Text>
-              <Text style={[styles.closingSubtitle, { color: palette.gold }]}>Contra Corriente</Text>
+              <Text style={[styles.closingSubtitle, { color: theme.colors.secondary }]}>Contra Corriente</Text>
               <View style={[styles.closingDivider, { backgroundColor: theme.colors.outlineVariant }]} />
               <Text style={[styles.closingVerse, { color: theme.colors.onSurfaceVariant }]}>
                 {RETIRO_VERSE_TEXT}
@@ -190,9 +98,9 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
                 Que el Señor los siga transformando y guiando{'\n'}en todo su caminar.
               </Text>
               <View style={styles.closingIcons}>
-                <Ionicons name="leaf-outline" size={18} color={palette.amber} />
-                <Ionicons name="star-outline" size={18} color={palette.gold} />
-                <Ionicons name="leaf-outline" size={18} color={palette.amber} />
+                <Ionicons name="leaf-outline" size={18} color={theme.colors.tertiary} />
+                <Ionicons name="star-outline" size={18} color={theme.colors.secondary} />
+                <Ionicons name="leaf-outline" size={18} color={theme.colors.tertiary} />
               </View>
             </View>
           </Animated.View>
@@ -211,11 +119,11 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
 
         {/* Secciones colapsables */}
         {([
-          { key: 'vestimenta', icon: 'shirt-outline' as const, color: palette.darkBlue, title: 'Código de Vestimenta' },
-          { key: 'llevar', icon: 'bag-check-outline' as const, color: palette.gold, title: '¿Qué debo llevar?' },
-          { key: 'recomendaciones', icon: 'bulb-outline' as const, color: palette.amber, title: 'Recomendaciones' },
-          { key: 'catedras', icon: 'school-outline' as const, color: palette.darkBlue, title: 'Durante las Cátedras' },
-          { key: 'infoExtra', icon: 'information-circle-outline' as const, color: palette.amber, title: 'Info Importante' },
+          { key: 'vestimenta', icon: 'shirt-outline' as const, color: accent.primary, title: 'Código de Vestimenta' },
+          { key: 'llevar', icon: 'bag-check-outline' as const, color: accent.secondary, title: '¿Qué debo llevar?' },
+          { key: 'recomendaciones', icon: 'bulb-outline' as const, color: accent.tertiary, title: 'Recomendaciones' },
+          { key: 'catedras', icon: 'school-outline' as const, color: accent.primary, title: 'Durante las Cátedras' },
+          { key: 'infoExtra', icon: 'information-circle-outline' as const, color: accent.tertiary, title: 'Info Importante' },
         ] as const).map(({ key, icon, color, title }, idx) => (
           <Animated.View key={key} entering={FadeInDown.delay(350 + idx * 100).springify()} style={styles.sectionOuter}>
             <TouchableOpacity
@@ -249,7 +157,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
                 </View>
                 <View style={[styles.genderDivider, { backgroundColor: theme.colors.outlineVariant }]} />
                 <View style={styles.genderRow}>
-                  <View style={[styles.genderDot, { backgroundColor: palette.darkBlue }]} />
+                  <View style={[styles.genderDot, { backgroundColor: accent.primary }]} />
                   <View style={styles.genderContent}>
                     <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicos</Text>
                     <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
@@ -272,7 +180,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
                 </View>
                 <View style={[styles.genderDivider, { backgroundColor: theme.colors.outlineVariant }]} />
                 <View style={styles.genderRow}>
-                  <View style={[styles.genderDot, { backgroundColor: palette.darkBlue }]} />
+                  <View style={[styles.genderDot, { backgroundColor: accent.primary }]} />
                   <View style={styles.genderContent}>
                     <Text style={[styles.genderLabel, { color: theme.colors.onSurface }]}>Chicos</Text>
                     <Text style={[styles.genderText, { color: theme.colors.onSurfaceVariant }]}>
@@ -286,9 +194,9 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
             {expandedSection === key && key === 'llevar' && (
               <View style={styles.itemsGrid}>
                 {queLlevar.map((item) => (
-                  <View key={item.label} style={styles.itemBox}>
-                    <View style={[styles.itemIconBg, { backgroundColor: `${palette.gold}18` }]}>
-                      <Ionicons name={item.icon as any} size={18} color={palette.gold} />
+                  <View key={item.label} style={[styles.itemBox, { backgroundColor: `${theme.colors.secondary}0A` }]}>
+                    <View style={[styles.itemIconBg, { backgroundColor: `${theme.colors.secondary}18` }]}>
+                      <Ionicons name={item.icon as any} size={18} color={theme.colors.secondary} />
                     </View>
                     <Text style={[styles.itemLabel, { color: theme.colors.onSurface }]}>{item.label}</Text>
                   </View>
@@ -300,7 +208,7 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
               <GlassCard elevation={2} style={styles.contentCard}>
                 {recomendaciones.map((rec) => (
                   <View key={rec.text} style={styles.recRow}>
-                    <View style={[styles.recDot, { backgroundColor: palette.amber }]} />
+                    <View style={[styles.recDot, { backgroundColor: theme.colors.tertiary }]} />
                     <Text style={[styles.recText, { color: theme.colors.onSurface }]}>{rec.text}</Text>
                   </View>
                 ))}
@@ -314,8 +222,8 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
                 </Text>
                 {duranteCatedras.map((item) => (
                   <View key={item.text} style={styles.recRow}>
-                    <View style={[styles.itemIconBgSm, { backgroundColor: `${palette.darkBlue}18` }]}>
-                      <Ionicons name={item.icon as any} size={14} color={palette.darkBlue} />
+                    <View style={[styles.itemIconBgSm, { backgroundColor: `${theme.colors.primary}18` }]}>
+                      <Ionicons name={item.icon as any} size={14} color={theme.colors.primary} />
                     </View>
                     <Text style={[styles.recText, { color: theme.colors.onSurface }]}>{item.text}</Text>
                   </View>
@@ -326,10 +234,10 @@ export function HomeScreen({ navigation }: HomeScreenProps) {
             {expandedSection === key && key === 'infoExtra' && (
               <View style={styles.infoGrid}>
                 {[
-                  { icon: 'cafe-outline' as const, color: palette.amber, title: 'Ayuno', desc: 'Habrá momentos de ayuno voluntario. Si necesitas alimentarte por condición médica, avísanos.' },
-                  { icon: 'water-outline' as const, color: palette.darkBlue, title: 'Piscina', desc: 'Trae ropa de cambio, sandalias y toalla.' },
-                  { icon: 'document-text-outline' as const, color: palette.amber, title: 'Menores de edad', desc: 'Permiso firmado por tus padres + documento de la organización.' },
-                  { icon: 'chatbubble-ellipses-outline' as const, color: palette.darkBlue, title: '¿Dudas?', desc: 'Contacta al equipo organizador antes del retiro.' },
+                  { icon: 'cafe-outline' as const, color: accent.tertiary, title: 'Ayuno', desc: 'Habrá momentos de ayuno voluntario. Si necesitas alimentarte por condición médica, avísanos.' },
+                  { icon: 'water-outline' as const, color: accent.primary, title: 'Piscina', desc: 'Trae ropa de cambio, sandalias y toalla.' },
+                  { icon: 'document-text-outline' as const, color: accent.tertiary, title: 'Menores de edad', desc: 'Permiso firmado por tus padres + documento de la organización.' },
+                  { icon: 'chatbubble-ellipses-outline' as const, color: accent.primary, title: '¿Dudas?', desc: 'Contacta al equipo organizador antes del retiro.' },
                 ].map((card) => (
                   <GlassCard key={card.title} elevation={1} style={styles.infoCard}>
                     <View style={[styles.infoIconBg, { backgroundColor: `${card.color}18` }]}>
@@ -361,7 +269,6 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   logoShadow: {
-    shadowColor: palette.gold,
     shadowOpacity: 0.4,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 4 },
@@ -397,7 +304,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 28,
     borderRadius: 20,
-    backgroundColor: `${palette.gold}0A`,
     gap: 12,
   },
   closingTitle: { fontSize: 20, fontWeight: '800', textAlign: 'center', lineHeight: 26 },
@@ -452,7 +358,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: `${palette.gold}0A`,
   },
   itemIconBg: {
     width: 32,
