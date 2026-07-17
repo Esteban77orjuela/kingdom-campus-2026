@@ -31,7 +31,20 @@
       "favicon": "./assets/favicon.png",
       "themeColor": "#1A237E"
     },
-    "plugins": [],
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 24
+          }
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "df693892-437a-46f1-be25-d60dd244bd94"
